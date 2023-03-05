@@ -60,14 +60,15 @@ impl Cohere {
 
         let mut headers = header::HeaderMap::new();
 
-        let mut authorization =
-            header::HeaderValue::from_str(&format!("Bearer {api_key}")).unwrap();
+        let mut authorization = header::HeaderValue::from_str(&format!("Bearer {api_key}"))
+            .expect("failed to construct authorization header!");
         authorization.set_sensitive(true);
         headers.insert(header::AUTHORIZATION, authorization);
 
         headers.insert(
             "Cohere-Version",
-            header::HeaderValue::from_str(&version).unwrap(),
+            header::HeaderValue::from_str(&version)
+                .expect("failed to construct cohere version header!"),
         );
 
         headers.insert(
@@ -89,7 +90,7 @@ impl Cohere {
             .use_rustls_tls()
             .timeout(Duration::from_secs(5))
             .build()
-            .unwrap();
+            .expect("failed to initialize HTTP client!");
 
         Cohere { api_url, client }
     }
@@ -113,6 +114,7 @@ impl Cohere {
             .await?)
     }
 
+    /// Verify that the Cohere API being used is valid
     pub async fn check_api_key(&self) -> Result<(), CohereApiError> {
         let response = self
             .request::<(), CohereCheckApiKeyResponse>("check-api-key", ())

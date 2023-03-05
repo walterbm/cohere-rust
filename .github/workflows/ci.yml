@@ -34,7 +34,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: olix0r/cargo-action-fmt/setup@v2
       - name: rust toolchain
         run: rustup show active-toolchain; cargo --version; rustc --version
@@ -46,7 +46,7 @@ jobs:
   clippy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: olix0r/cargo-action-fmt/setup@v2
       - name: rust toolchain
         run: rustup show active-toolchain; cargo --version; rustc --version
@@ -56,7 +56,7 @@ jobs:
   rustfmt:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: olix0r/cargo-action-fmt/setup@v2
       - name: rust toolchain
         run: rustup show active-toolchain; cargo --version; rustc --version

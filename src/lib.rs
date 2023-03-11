@@ -46,18 +46,19 @@ impl Default for Cohere {
     fn default() -> Self {
         let api_key = std::env::var("COHERE_API_KEY")
             .expect("please provide a Cohere API key with the 'COHERE_API_KEY' env variable");
-        Cohere::new(
-            String::from(COHERE_API_BASE_URL),
-            &api_key,
-            COHERE_API_LATEST_VERSION,
-        )
+        Cohere::new(COHERE_API_BASE_URL, api_key, COHERE_API_LATEST_VERSION)
     }
 }
 
 impl Cohere {
-    pub fn new(api_url: String, api_key: &str, version: &str) -> Self {
-        let api_key = String::from(api_key);
-        let version = String::from(version);
+    pub fn new<U: Into<String>, K: Into<String>, V: Into<String>>(
+        api_url: U,
+        api_key: K,
+        version: V,
+    ) -> Self {
+        let api_url: String = api_url.into();
+        let api_key: String = api_key.into();
+        let version: String = version.into();
 
         let mut headers = header::HeaderMap::new();
 

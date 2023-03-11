@@ -11,8 +11,7 @@ async fn main() {
     match co.detokenize(&request).await {
         Ok(r) => println!("Detokenize response: {:?}", r),
         Err(e) => {
-            dbg!(e);
-            println!("Detokenize failed!")
+            println!("Detokenize failed! {}", e)
         }
     }
 }

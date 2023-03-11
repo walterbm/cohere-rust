@@ -11,8 +11,7 @@ async fn main() {
     match co.tokenize(&request).await {
         Ok(r) => println!("Tokenize response: {:?}", r),
         Err(e) => {
-            dbg!(e);
-            println!("Tokenize failed!")
+            println!("Tokenize failed! {}", e)
         }
     }
 }

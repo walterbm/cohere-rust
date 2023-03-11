@@ -19,8 +19,7 @@ async fn main() {
     match co.generate(&request).await {
         Ok(r) => println!("Generate response: {:?}", r),
         Err(e) => {
-            dbg!(e);
-            println!("Generate failed!")
+            println!("Generate failed! {}", e)
         }
     }
 }

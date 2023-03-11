@@ -490,4 +490,39 @@ mod tests {
         assert_eq!(vec![34160,974,514,34,1420,69], response.tokens);
         assert_eq!(vec!["token","ize"," me","!"," :","D"], response.token_strings);
     }
+
+    #[tokio::test]
+    async fn test_api_failure() {
+        // Create mock server
+        let mut mock_server = mockito::Server::new_async().await;
+        let mock_url = mock_server.url();
+
+        // Create a mock
+        let mock_endpoint = mock_server
+            .mock("POST", "/tokenize")
+            .with_status(500)
+            .with_header("content-type", "application/json")
+            .with_body(r#"{"message":"invalid request: inputs cannot be empty"}"#)
+            .create_async()
+            .await;
+
+        let client = Cohere::new(mock_url, "test-key", "test-version");
+
+        let request = TokenizeRequest {
+            text: "".to_string()
+        };
+
+        let response = client
+            .tokenize(&request)
+            .await;
+
+        // assert that mock endpoint was called
+        mock_endpoint.assert_async().await;
+
+        assert!(response.is_err());
+
+        let response = response.err().unwrap();
+
+        assert_eq!("API request failed with status code `500 Internal Server Error` and error message `{\"message\":\"invalid request: inputs cannot be empty\"}`", response.to_string());
+    }
 }

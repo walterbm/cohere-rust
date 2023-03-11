@@ -18,8 +18,7 @@ async fn main() {
     match co.summarize(&request).await {
         Ok(r) => println!("Summarize response: {:?}", r),
         Err(e) => {
-            dbg!(e);
-            println!("Summarize failed!")
+            println!("Summarize failed! {}", e)
         }
     }
 }

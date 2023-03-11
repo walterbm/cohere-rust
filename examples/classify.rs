@@ -62,8 +62,7 @@ async fn main() {
     match co.classify(&request).await {
         Ok(r) => println!("Classify response: {:?}", r),
         Err(e) => {
-            dbg!(e);
-            println!("Classify failed!")
+            println!("Classify failed! {}", e)
         }
     }
 }

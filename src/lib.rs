@@ -9,7 +9,7 @@ use api::{
     summarize::{SummarizeRequest, SummarizeResponse},
     tokenize::{TokenizeRequest, TokenizeResponse},
 };
-use reqwest::{header, ClientBuilder, Url};
+use reqwest::{header, ClientBuilder, StatusCode, Url};
 
 const COHERE_API_BASE_URL: &str = "https://api.cohere.ai";
 const COHERE_API_LATEST_VERSION: &str = "2022-12-06";
@@ -21,8 +21,10 @@ pub mod api;
 
 #[derive(Error, Debug)]
 pub enum CohereApiError {
-    #[error("API request error")]
+    #[error("Unexpected request error")]
     RequestError(#[from] reqwest::Error),
+    #[error("API request failed with status code `{0}` and error message `{1}`")]
+    ApiError(StatusCode, String),
     #[error("API key is invalid")]
     InvalidApiKey,
     #[error("Unknown error")]
@@ -102,15 +104,16 @@ impl Cohere {
         let url =
             Url::parse(&format!("{}/{route}", self.api_url)).expect("api url should be valid");
 
-        Ok(self
-            .client
-            .post(url)
-            .json(&payload)
-            .send()
-            .await?
-            .error_for_status()?
-            .json::<Response>()
-            .await?)
+        let response = self.client.post(url).json(&payload).send().await?;
+
+        if response.status().is_client_error() || response.status().is_server_error() {
+            Err(CohereApiError::ApiError(
+                response.status(),
+                response.text().await?,
+            ))
+        } else {
+            Ok(response.json::<Response>().await?)
+        }
     }
 
     /// Verify that the Cohere API key being used is valid

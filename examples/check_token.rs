@@ -6,8 +6,7 @@ async fn main() {
 
     match co.check_api_key().await {
         Ok(_) => println!("COHERE_API_KEY is valid!"),
-        Err(e) => {
-            dbg!(e);
+        Err(_) => {
             println!("COHERE_API_KEY is not valid!")
         }
     }

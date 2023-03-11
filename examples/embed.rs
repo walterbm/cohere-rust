@@ -15,8 +15,7 @@ async fn main() {
     match co.embed(&request).await {
         Ok(r) => println!("Embed response: {:?}", r),
         Err(e) => {
-            dbg!(e);
-            println!("Embed failed!")
+            println!("Embed failed! {}", e)
         }
     }
 }

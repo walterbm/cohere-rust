@@ -11,8 +11,7 @@ async fn main() {
     match co.detect_language(&request).await {
         Ok(r) => println!("Detect language response: {:?}", r),
         Err(e) => {
-            dbg!(e);
-            println!("Detect language failed!")
+            println!("Detect language failed! {}", e)
         }
     }
 }

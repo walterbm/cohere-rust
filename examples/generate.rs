@@ -16,7 +16,7 @@ async fn main() {
         ..Default::default()
     };
 
-    match co.generate(request).await {
+    match co.generate(&request).await {
         Ok(r) => println!("Generate response: {:?}", r),
         Err(e) => {
             dbg!(e);

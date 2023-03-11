@@ -1,10 +1,14 @@
-use cohere_rust::Cohere;
+use cohere_rust::{api::detokenize::DetokenizeRequest, Cohere};
 
 #[tokio::main]
 async fn main() {
     let co = Cohere::default();
 
-    match co.detokenize(vec![10104, 12221, 1315, 34, 1420, 69]).await {
+    let request = DetokenizeRequest {
+        tokens: vec![10104, 12221, 1315, 34, 1420, 69],
+    };
+
+    match co.detokenize(&request).await {
         Ok(r) => println!("Detokenize response: {:?}", r),
         Err(e) => {
             dbg!(e);

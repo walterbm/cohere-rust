@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use super::Truncate;
 
 #[derive(Serialize, Debug)]
-pub(crate) struct EmbedRequest {
+pub struct EmbedRequest {
     /// An optional string representing the model you'd like to use.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub model: Option<EmbedModel>,

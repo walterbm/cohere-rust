@@ -15,7 +15,7 @@ async fn main() {
         ..Default::default()
     };
 
-    match co.summarize(request).await {
+    match co.summarize(&request).await {
         Ok(r) => println!("Summarize response: {:?}", r),
         Err(e) => {
             dbg!(e);

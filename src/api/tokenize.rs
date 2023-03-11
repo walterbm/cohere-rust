@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Debug)]
-pub(crate) struct TokenizeRequest {
+pub struct TokenizeRequest {
     /// The string to be tokenized
     pub text: String,
 }

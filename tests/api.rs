@@ -4,9 +4,9 @@ mod tests {
 
     use cohere_rust::{
         api::{
-            detect_language::DetectLanguageResult,
+            detect_language::{DetectLanguageResult, DetectLanguageRequest},
             generate::{GenerateRequest, ReturnLikelihoods},
-            Truncate, summarize::{SummarizeRequest, SummarizeLength, SummarizeFormat, SummarizeModel, SummarizeExtractiveness}, classify::{ClassifyRequest, ClassifyExample, Classification, LabelProperties},
+            Truncate, summarize::{SummarizeRequest, SummarizeLength, SummarizeFormat, SummarizeModel, SummarizeExtractiveness}, classify::{ClassifyRequest, ClassifyExample, Classification, LabelProperties}, embed::EmbedRequest, tokenize::TokenizeRequest, detokenize::DetokenizeRequest,
         },
         Cohere,
     };
@@ -68,7 +68,7 @@ mod tests {
         let client = Cohere::new(mock_url, "test-key", "test-version");
 
         let response = client
-            .classify(ClassifyRequest {
+            .classify(&ClassifyRequest {
                 inputs: vec![
                     "Confirm your email address".to_string(),
                     "hey i need u to send some $".to_string(),
@@ -177,11 +177,15 @@ mod tests {
 
         let client = Cohere::new(mock_url, "test-key", "test-version");
 
-        let response = client
-            .detect_language(vec![
+        let request = DetectLanguageRequest {
+            texts: vec![
                 "Hello Cohere!".to_string(),
                 "Hola mis amigos!".to_string(),
-            ])
+            ]
+        };
+
+        let response = client
+            .detect_language(&request)
             .await;
 
         // assert that mock endpoint was called
@@ -234,8 +238,12 @@ mod tests {
 
         let client = Cohere::new(mock_url, "test-key", "test-version");
 
+        let request = DetokenizeRequest {
+            tokens: vec![10104, 12221, 1315, 34, 1420, 69],
+        };
+
         let response = client
-            .detokenize(vec![10104, 12221, 1315, 34, 1420, 69])
+            .detokenize(&request)
             .await;
 
         // assert that mock endpoint was called
@@ -297,8 +305,14 @@ mod tests {
 
         let client = Cohere::new(mock_url, "test-key", "test-version");
 
+        let request = EmbedRequest {
+            model: None,
+            texts: vec!["hi".to_string()],
+            truncate: Truncate::End,
+        };
+
         let response = client
-            .embed(vec!["hi".to_string()], Truncate::End, None)
+            .embed(&request)
             .await;
 
         // assert that mock endpoint was called
@@ -347,7 +361,7 @@ mod tests {
         let client = Cohere::new(mock_url, "test-key", "test-version");
 
         let response = client
-            .generate(GenerateRequest {
+            .generate(&GenerateRequest {
                 max_tokens: Some(20),
                 return_likelihoods: Some(ReturnLikelihoods::None),
                 truncate: Some(Truncate::End),
@@ -396,7 +410,7 @@ mod tests {
         let client = Cohere::new(mock_url, "test-key", "test-version");
 
         let response = client
-            .summarize(SummarizeRequest { 
+            .summarize(&SummarizeRequest { 
                 text: "Ice cream is a sweetened frozen food typically eaten as a snack or dessert. It may be made from milk or cream and is flavoured with a sweetener, either sugar or an alternative, and a spice, such as cocoa or vanilla, or with fruit such as strawberries or peaches. It can also be made by whisking a flavored cream base and liquid nitrogen together. Food coloring is sometimes added, in addition to stabilizers. The mixture is cooled below the freezing point of water and stirred to incorporate air spaces and to prevent detectable ice crystals from forming. The result is a smooth, semi-solid foam that is solid at very low temperatures (below 2 °C or 35 °F). It becomes more malleable as its temperature increases.\n\nThe meaning of the name \"ice cream\" varies from one country to another. In some countries, such as the United States, \"ice cream\" applies only to a specific variety, and most governments regulate the commercial use of the various terms according to the relative quantities of the main ingredients, notably the amount of cream. Products that do not meet the criteria to be called ice cream are sometimes labelled \"frozen dairy dessert\" instead. In other countries, such as Italy and Argentina, one word is used fo\r all variants. Analogues made from dairy alternatives, such as goat's or sheep's milk, or milk substitutes (e.g., soy, cashew, coconut, almond milk or tofu), are available for those who are lactose intolerant, allergic to dairy protein or vegan.".to_string(),
                 length: Some(SummarizeLength::Medium),
                 format: Some(SummarizeFormat::Paragraph),
@@ -458,8 +472,12 @@ mod tests {
 
         let client = Cohere::new(mock_url, "test-key", "test-version");
 
+        let request = TokenizeRequest {
+            text: "tokenize me! :D".to_string()
+        };
+
         let response = client
-            .tokenize("tokenize me! :D".to_string())
+            .tokenize(&request)
             .await;
 
         // assert that mock endpoint was called

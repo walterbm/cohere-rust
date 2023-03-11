@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Debug)]
-pub(crate) struct DetectLanguageRequest {
+pub struct DetectLanguageRequest {
     /// List of detected languages, one per text
     pub texts: Vec<String>,
 }

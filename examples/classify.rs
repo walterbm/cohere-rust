@@ -59,7 +59,7 @@ async fn main() {
         ..Default::default()
     };
 
-    match co.classify(request).await {
+    match co.classify(&request).await {
         Ok(r) => println!("Classify response: {:?}", r),
         Err(e) => {
             dbg!(e);

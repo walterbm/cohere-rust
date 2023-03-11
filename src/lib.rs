@@ -4,11 +4,10 @@ use api::{
     classify::{Classification, ClassifyRequest, ClassifyResponse},
     detect_language::{DetectLanguageRequest, DetectLanguageResponse, DetectLanguageResult},
     detokenize::{DetokenizeRequest, DetokenizeResponse},
-    embed::{EmbedModel, EmbedRequest, EmbedResponse},
+    embed::{EmbedRequest, EmbedResponse},
     generate::{GenerateRequest, GenerateResponse, Generation},
     summarize::{SummarizeRequest, SummarizeResponse},
     tokenize::{TokenizeRequest, TokenizeResponse},
-    Truncate,
 };
 use reqwest::{header, ClientBuilder, Url};
 
@@ -22,11 +21,11 @@ pub mod api;
 
 #[derive(Error, Debug)]
 pub enum CohereApiError {
-    #[error("request error")]
+    #[error("API request error")]
     RequestError(#[from] reqwest::Error),
     #[error("API key is invalid")]
     InvalidApiKey,
-    #[error("unknown error")]
+    #[error("Unknown error")]
     Unknown,
 }
 
@@ -114,7 +113,7 @@ impl Cohere {
             .await?)
     }
 
-    /// Verify that the Cohere API being used is valid
+    /// Verify that the Cohere API key being used is valid
     pub async fn check_api_key(&self) -> Result<(), CohereApiError> {
         let response = self
             .request::<(), CohereCheckApiKeyResponse>("check-api-key", ())
@@ -129,7 +128,7 @@ impl Cohere {
     /// Generates realistic text conditioned on a given input.
     pub async fn generate(
         &self,
-        request: GenerateRequest,
+        request: &GenerateRequest,
     ) -> Result<Vec<Generation>, CohereApiError> {
         let response = self
             .request::<_, GenerateResponse>("generate", request)
@@ -141,22 +140,8 @@ impl Cohere {
     /// Returns text embeddings.
     /// An embedding is a list of floating point numbers that captures semantic information about the text that it represents.
     /// Embeddings can be used to create text classifiers as well as empower semantic search.
-    pub async fn embed(
-        &self,
-        texts: Vec<String>,
-        truncate: Truncate,
-        model: Option<EmbedModel>,
-    ) -> Result<Vec<Vec<f64>>, CohereApiError> {
-        let response = self
-            .request::<_, EmbedResponse>(
-                "embed",
-                &EmbedRequest {
-                    texts,
-                    truncate,
-                    model,
-                },
-            )
-            .await?;
+    pub async fn embed(&self, request: &EmbedRequest) -> Result<Vec<Vec<f64>>, CohereApiError> {
+        let response = self.request::<_, EmbedResponse>("embed", request).await?;
 
         Ok(response.embeddings)
     }
@@ -165,7 +150,7 @@ impl Cohere {
     /// To make a prediction, classify uses the provided examples of text + label pairs as a reference.
     pub async fn classify(
         &self,
-        request: ClassifyRequest,
+        request: &ClassifyRequest,
     ) -> Result<Vec<Classification>, CohereApiError> {
         let response = self
             .request::<_, ClassifyResponse>("classify", request)
@@ -175,7 +160,7 @@ impl Cohere {
     }
 
     /// Generates a summary in English for a given text.
-    pub async fn summarize(&self, request: SummarizeRequest) -> Result<String, CohereApiError> {
+    pub async fn summarize(&self, request: &SummarizeRequest) -> Result<String, CohereApiError> {
         let response = self
             .request::<_, SummarizeResponse>("summarize", request)
             .await?;
@@ -184,16 +169,19 @@ impl Cohere {
     }
 
     /// Splits input text into smaller units called tokens using byte-pair encoding (BPE).
-    pub async fn tokenize(&self, text: String) -> Result<TokenizeResponse, CohereApiError> {
-        let response = self.request("tokenize", &TokenizeRequest { text }).await?;
+    pub async fn tokenize(
+        &self,
+        request: &TokenizeRequest,
+    ) -> Result<TokenizeResponse, CohereApiError> {
+        let response = self.request("tokenize", request).await?;
 
         Ok(response)
     }
 
     /// Takes tokens using byte-pair encoding and returns their text representation.
-    pub async fn detokenize(&self, tokens: Vec<u64>) -> Result<String, CohereApiError> {
+    pub async fn detokenize(&self, request: &DetokenizeRequest) -> Result<String, CohereApiError> {
         let response = self
-            .request::<_, DetokenizeResponse>("detokenize", &DetokenizeRequest { tokens })
+            .request::<_, DetokenizeResponse>("detokenize", request)
             .await?;
 
         Ok(response.text)
@@ -202,13 +190,10 @@ impl Cohere {
     /// Identifies which language each of the provided texts is written in
     pub async fn detect_language(
         &self,
-        texts: Vec<String>,
+        request: &DetectLanguageRequest,
     ) -> Result<Vec<DetectLanguageResult>, CohereApiError> {
         let response = self
-            .request::<_, DetectLanguageResponse>(
-                "detect-language",
-                &DetectLanguageRequest { texts },
-            )
+            .request::<_, DetectLanguageResponse>("detect-language", request)
             .await?;
 
         Ok(response.results)

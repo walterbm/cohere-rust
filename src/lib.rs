@@ -42,6 +42,11 @@ struct CohereCheckApiKeyResponse {
     valid: bool,
 }
 
+#[derive(Deserialize, Debug)]
+struct CohereApiErrorResponse {
+    message: String,
+}
+
 impl Default for Cohere {
     fn default() -> Self {
         let api_key = std::env::var("COHERE_API_KEY")
@@ -110,7 +115,13 @@ impl Cohere {
         if response.status().is_client_error() || response.status().is_server_error() {
             Err(CohereApiError::ApiError(
                 response.status(),
-                response.text().await?,
+                response
+                    .json::<CohereApiErrorResponse>()
+                    .await
+                    .unwrap_or(CohereApiErrorResponse {
+                        message: "Unknown API Error".to_string(),
+                    })
+                    .message,
             ))
         } else {
             Ok(response.json::<Response>().await?)

@@ -523,6 +523,6 @@ mod tests {
 
         let response = response.err().unwrap();
 
-        assert_eq!("API request failed with status code `500 Internal Server Error` and error message `{\"message\":\"invalid request: inputs cannot be empty\"}`", response.to_string());
+        assert_eq!("API request failed with status code `500 Internal Server Error` and error message `invalid request: inputs cannot be empty`", response.to_string());
     }
 }

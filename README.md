@@ -32,15 +32,14 @@ async fn main() {
         max_tokens: Some(20),
         return_likelihoods: Some(ReturnLikelihoods::None),
         truncate: Some(Truncate::End),
-        prompt: "Once upon a time in a magical land called".to_string(),
+        prompt: "Once upon a time in a magical land called",
         ..Default::default()
     };
 
-    match co.generate(request).await {
+    match co.generate(&request).await {
         Ok(r) => println!("Generate response: {:?}", r),
         Err(e) => {
-            dbg!(e);
-            println!("Generate failed!")
+            println!("Generate failed! {}", e)
         }
     }
 }

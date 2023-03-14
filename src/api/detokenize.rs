@@ -1,9 +1,9 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Debug)]
-pub struct DetokenizeRequest {
+pub struct DetokenizeRequest<'input> {
     /// The tokens to be detokenized
-    pub tokens: Vec<u64>,
+    pub tokens: &'input [u64],
 }
 
 #[derive(Deserialize, Debug)]

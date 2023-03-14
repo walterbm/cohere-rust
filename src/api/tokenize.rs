@@ -1,9 +1,9 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Debug)]
-pub struct TokenizeRequest {
+pub struct TokenizeRequest<'input> {
     /// The string to be tokenized
-    pub text: String,
+    pub text: &'input str,
 }
 
 #[derive(Deserialize, Debug)]

@@ -8,7 +8,7 @@ async fn main() {
 
     let request = EmbedRequest {
         model: Some(EmbedModel::Small),
-        texts: vec!["hello".to_string(), "goodbye".to_string()],
+        texts: &["hello".to_string(), "goodbye".to_string()],
         truncate: Truncate::End,
     };
 

@@ -1,9 +1,9 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Debug)]
-pub struct DetectLanguageRequest {
+pub struct DetectLanguageRequest<'input> {
     /// List of detected languages, one per text
-    pub texts: Vec<String>,
+    pub texts: &'input [String],
 }
 
 #[derive(Deserialize, Debug)]

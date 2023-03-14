@@ -4,12 +4,12 @@ use std::collections::HashMap;
 use super::Truncate;
 
 #[derive(Serialize, Default, Debug)]
-pub struct GenerateRequest {
+pub struct GenerateRequest<'input> {
     /// An optional string representing the model you'd like to use.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub model: Option<GenerateModel>,
     /// Represents the prompt or text to be completed.
-    pub prompt: String,
+    pub prompt: &'input str,
     /// optional - Denotes the number of tokens to predict per generation.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub max_tokens: Option<u32>,

@@ -5,7 +5,7 @@ async fn main() {
     let co = Cohere::default();
 
     let request = DetokenizeRequest {
-        tokens: vec![10104, 12221, 1315, 34, 1420, 69],
+        tokens: &[10104, 12221, 1315, 34, 1420, 69],
     };
 
     match co.detokenize(&request).await {

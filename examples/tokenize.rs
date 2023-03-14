@@ -5,7 +5,7 @@ async fn main() {
     let co = Cohere::default();
 
     let request = TokenizeRequest {
-        text: "tokenize me! :D".to_string(),
+        text: "tokenize me! :D",
     };
 
     match co.tokenize(&request).await {

@@ -3,12 +3,13 @@ use serde::{Deserialize, Serialize};
 use super::Truncate;
 
 #[derive(Serialize, Debug)]
-pub struct EmbedRequest {
+pub struct EmbedRequest<'input> {
     /// An optional string representing the model you'd like to use.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub model: Option<EmbedModel>,
     /// An array of strings for the model to embed.
-    pub texts: Vec<String>,
+    pub texts: &'input [String],
+    /// Specify how the API will handle inputs longer than the maximum token length.
     pub truncate: Truncate,
 }
 

@@ -5,50 +5,50 @@ use cohere_rust::Cohere;
 async fn main() {
     let co = Cohere::default();
 
-    let examples = vec![
+    let examples = &vec![
         ClassifyExample {
-            text: "Dermatologists don't like her!".to_string(),
-            label: "Spam".to_string(),
+            text: "Dermatologists don't like her!",
+            label: "Spam",
         },
         ClassifyExample {
-            text: "Hello, open to this?".to_string(),
-            label: "Spam".to_string(),
+            text: "Hello, open to this?",
+            label: "Spam",
         },
         ClassifyExample {
-            text: "I need help please wire me $1000 right now".to_string(),
-            label: "Spam".to_string(),
+            text: "I need help please wire me $1000 right now",
+            label: "Spam",
         },
         ClassifyExample {
-            text: "Nice to know you ;)".to_string(),
-            label: "Spam".to_string(),
+            text: "Nice to know you ;)",
+            label: "Spam",
         },
         ClassifyExample {
-            text: "Please help me?".to_string(),
-            label: "Spam".to_string(),
+            text: "Please help me?",
+            label: "Spam",
         },
         ClassifyExample {
-            text: "Your parcel will be delivered today".to_string(),
-            label: "Not spam".to_string(),
+            text: "Your parcel will be delivered today",
+            label: "Not spam",
         },
         ClassifyExample {
-            text: "Review changes to our Terms and Conditions".to_string(),
-            label: "Not spam".to_string(),
+            text: "Review changes to our Terms and Conditions",
+            label: "Not spam",
         },
         ClassifyExample {
-            text: "Weekly sync notes".to_string(),
-            label: "Not spam".to_string(),
+            text: "Weekly sync notes",
+            label: "Not spam",
         },
         ClassifyExample {
-            text: "Re: Follow up from today's meeting".to_string(),
-            label: "Not spam".to_string(),
+            text: "Re: Follow up from today's meeting",
+            label: "Not spam",
         },
         ClassifyExample {
-            text: "Pre-read for tomorrow".to_string(),
-            label: "Not spam".to_string(),
+            text: "Pre-read for tomorrow",
+            label: "Not spam",
         },
     ];
 
-    let inputs = vec![
+    let inputs = &vec![
         "Confirm your email address".to_string(),
         "hey i need u to send some $".to_string(),
     ];

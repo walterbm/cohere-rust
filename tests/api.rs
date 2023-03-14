@@ -69,50 +69,48 @@ mod tests {
 
         let response = client
             .classify(&ClassifyRequest {
-                inputs: vec![
-                    "Confirm your email address".to_string(),
-                    "hey i need u to send some $".to_string(),
-                ],
-                examples: vec![
+                inputs: &["Confirm your email address".to_string(),
+                    "hey i need u to send some $".to_string()],
+                examples: &vec![
                     ClassifyExample {
-                        text: "Dermatologists don't like her!".to_string(),
-                        label: "Spam".to_string(),
+                        text: "Dermatologists don't like her!",
+                        label: "Spam",
                     },
                     ClassifyExample {
-                        text: "Hello, open to this?".to_string(),
-                        label: "Spam".to_string(),
+                        text: "Hello, open to this?",
+                        label: "Spam",
                     },
                     ClassifyExample {
-                        text: "I need help please wire me $1000 right now".to_string(),
-                        label: "Spam".to_string(),
+                        text: "I need help please wire me $1000 right now",
+                        label: "Spam",
                     },
                     ClassifyExample {
-                        text: "Nice to know you ;)".to_string(),
-                        label: "Spam".to_string(),
+                        text: "Nice to know you ;)",
+                        label: "Spam",
                     },
                     ClassifyExample {
-                        text: "Please help me?".to_string(),
-                        label: "Spam".to_string(),
+                        text: "Please help me?",
+                        label: "Spam",
                     },
                     ClassifyExample {
-                        text: "Your parcel will be delivered today".to_string(),
-                        label: "Not spam".to_string(),
+                        text: "Your parcel will be delivered today",
+                        label: "Not spam",
                     },
                     ClassifyExample {
-                        text: "Review changes to our Terms and Conditions".to_string(),
-                        label: "Not spam".to_string(),
+                        text: "Review changes to our Terms and Conditions",
+                        label: "Not spam",
                     },
                     ClassifyExample {
-                        text: "Weekly sync notes".to_string(),
-                        label: "Not spam".to_string(),
+                        text: "Weekly sync notes",
+                        label: "Not spam",
                     },
                     ClassifyExample {
-                        text: "Re: Follow up from today's meeting".to_string(),
-                        label: "Not spam".to_string(),
+                        text: "Re: Follow up from today's meeting",
+                        label: "Not spam",
                     },
                     ClassifyExample {
-                        text: "Pre-read for tomorrow".to_string(),
-                        label: "Not spam".to_string(),
+                        text: "Pre-read for tomorrow",
+                        label: "Not spam",
                     },
                 ],
                 ..Default::default()
@@ -178,7 +176,7 @@ mod tests {
         let client = Cohere::new(mock_url, "test-key", "test-version");
 
         let request = DetectLanguageRequest {
-            texts: vec![
+            texts: &[
                 "Hello Cohere!".to_string(),
                 "Hola mis amigos!".to_string(),
             ]
@@ -239,7 +237,7 @@ mod tests {
         let client = Cohere::new(mock_url, "test-key", "test-version");
 
         let request = DetokenizeRequest {
-            tokens: vec![10104, 12221, 1315, 34, 1420, 69],
+            tokens: &[10104, 12221, 1315, 34, 1420, 69],
         };
 
         let response = client
@@ -307,7 +305,7 @@ mod tests {
 
         let request = EmbedRequest {
             model: None,
-            texts: vec!["hi".to_string()],
+            texts: &["hi".to_string()],
             truncate: Truncate::End,
         };
 
@@ -365,7 +363,7 @@ mod tests {
                 max_tokens: Some(20),
                 return_likelihoods: Some(ReturnLikelihoods::None),
                 truncate: Some(Truncate::End),
-                prompt: "Once upon a time in a magical land called".to_string(),
+                prompt: "Once upon a time in a magical land called",
                 ..Default::default()
             })
             .await;
@@ -411,7 +409,7 @@ mod tests {
 
         let response = client
             .summarize(&SummarizeRequest { 
-                text: "Ice cream is a sweetened frozen food typically eaten as a snack or dessert. It may be made from milk or cream and is flavoured with a sweetener, either sugar or an alternative, and a spice, such as cocoa or vanilla, or with fruit such as strawberries or peaches. It can also be made by whisking a flavored cream base and liquid nitrogen together. Food coloring is sometimes added, in addition to stabilizers. The mixture is cooled below the freezing point of water and stirred to incorporate air spaces and to prevent detectable ice crystals from forming. The result is a smooth, semi-solid foam that is solid at very low temperatures (below 2 °C or 35 °F). It becomes more malleable as its temperature increases.\n\nThe meaning of the name \"ice cream\" varies from one country to another. In some countries, such as the United States, \"ice cream\" applies only to a specific variety, and most governments regulate the commercial use of the various terms according to the relative quantities of the main ingredients, notably the amount of cream. Products that do not meet the criteria to be called ice cream are sometimes labelled \"frozen dairy dessert\" instead. In other countries, such as Italy and Argentina, one word is used fo\r all variants. Analogues made from dairy alternatives, such as goat's or sheep's milk, or milk substitutes (e.g., soy, cashew, coconut, almond milk or tofu), are available for those who are lactose intolerant, allergic to dairy protein or vegan.".to_string(),
+                text: "Ice cream is a sweetened frozen food typically eaten as a snack or dessert. It may be made from milk or cream and is flavoured with a sweetener, either sugar or an alternative, and a spice, such as cocoa or vanilla, or with fruit such as strawberries or peaches. It can also be made by whisking a flavored cream base and liquid nitrogen together. Food coloring is sometimes added, in addition to stabilizers. The mixture is cooled below the freezing point of water and stirred to incorporate air spaces and to prevent detectable ice crystals from forming. The result is a smooth, semi-solid foam that is solid at very low temperatures (below 2 °C or 35 °F). It becomes more malleable as its temperature increases.\n\nThe meaning of the name \"ice cream\" varies from one country to another. In some countries, such as the United States, \"ice cream\" applies only to a specific variety, and most governments regulate the commercial use of the various terms according to the relative quantities of the main ingredients, notably the amount of cream. Products that do not meet the criteria to be called ice cream are sometimes labelled \"frozen dairy dessert\" instead. In other countries, such as Italy and Argentina, one word is used fo\r all variants. Analogues made from dairy alternatives, such as goat's or sheep's milk, or milk substitutes (e.g., soy, cashew, coconut, almond milk or tofu), are available for those who are lactose intolerant, allergic to dairy protein or vegan.",
                 length: Some(SummarizeLength::Medium),
                 format: Some(SummarizeFormat::Paragraph),
                 model: Some(SummarizeModel::XLarge),
@@ -473,7 +471,7 @@ mod tests {
         let client = Cohere::new(mock_url, "test-key", "test-version");
 
         let request = TokenizeRequest {
-            text: "tokenize me! :D".to_string()
+            text: "tokenize me! :D"
         };
 
         let response = client
@@ -509,7 +507,7 @@ mod tests {
         let client = Cohere::new(mock_url, "test-key", "test-version");
 
         let request = TokenizeRequest {
-            text: "".to_string()
+            text: ""
         };
 
         let response = client

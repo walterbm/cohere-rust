@@ -141,9 +141,9 @@ impl Cohere {
     }
 
     /// Generates realistic text conditioned on a given input.
-    pub async fn generate(
+    pub async fn generate<'input>(
         &self,
-        request: &GenerateRequest,
+        request: &GenerateRequest<'input>,
     ) -> Result<Vec<Generation>, CohereApiError> {
         let response = self
             .request::<_, GenerateResponse>("generate", request)
@@ -155,7 +155,10 @@ impl Cohere {
     /// Returns text embeddings.
     /// An embedding is a list of floating point numbers that captures semantic information about the text that it represents.
     /// Embeddings can be used to create text classifiers as well as empower semantic search.
-    pub async fn embed(&self, request: &EmbedRequest) -> Result<Vec<Vec<f64>>, CohereApiError> {
+    pub async fn embed<'input>(
+        &self,
+        request: &EmbedRequest<'input>,
+    ) -> Result<Vec<Vec<f64>>, CohereApiError> {
         let response = self.request::<_, EmbedResponse>("embed", request).await?;
 
         Ok(response.embeddings)
@@ -163,9 +166,9 @@ impl Cohere {
 
     /// Makes a prediction about which label fits the specified text inputs best.
     /// To make a prediction, classify uses the provided examples of text + label pairs as a reference.
-    pub async fn classify(
+    pub async fn classify<'input>(
         &self,
-        request: &ClassifyRequest,
+        request: &ClassifyRequest<'input>,
     ) -> Result<Vec<Classification>, CohereApiError> {
         let response = self
             .request::<_, ClassifyResponse>("classify", request)
@@ -175,7 +178,10 @@ impl Cohere {
     }
 
     /// Generates a summary in English for a given text.
-    pub async fn summarize(&self, request: &SummarizeRequest) -> Result<String, CohereApiError> {
+    pub async fn summarize<'input>(
+        &self,
+        request: &SummarizeRequest<'input>,
+    ) -> Result<String, CohereApiError> {
         let response = self
             .request::<_, SummarizeResponse>("summarize", request)
             .await?;
@@ -184,9 +190,9 @@ impl Cohere {
     }
 
     /// Splits input text into smaller units called tokens using byte-pair encoding (BPE).
-    pub async fn tokenize(
+    pub async fn tokenize<'input>(
         &self,
-        request: &TokenizeRequest,
+        request: &TokenizeRequest<'input>,
     ) -> Result<TokenizeResponse, CohereApiError> {
         let response = self.request("tokenize", request).await?;
 
@@ -194,7 +200,10 @@ impl Cohere {
     }
 
     /// Takes tokens using byte-pair encoding and returns their text representation.
-    pub async fn detokenize(&self, request: &DetokenizeRequest) -> Result<String, CohereApiError> {
+    pub async fn detokenize<'input>(
+        &self,
+        request: &DetokenizeRequest<'input>,
+    ) -> Result<String, CohereApiError> {
         let response = self
             .request::<_, DetokenizeResponse>("detokenize", request)
             .await?;
@@ -203,9 +212,9 @@ impl Cohere {
     }
 
     /// Identifies which language each of the provided texts is written in
-    pub async fn detect_language(
+    pub async fn detect_language<'input>(
         &self,
-        request: &DetectLanguageRequest,
+        request: &DetectLanguageRequest<'input>,
     ) -> Result<Vec<DetectLanguageResult>, CohereApiError> {
         let response = self
             .request::<_, DetectLanguageResponse>("detect-language", request)

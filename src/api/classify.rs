@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Default, Debug)]
-pub struct ClassifyRequest {
+pub struct ClassifyRequest<'input> {
     /// An optional string representing the model you'd like to use.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub model: Option<ClassifyModel>,
@@ -11,9 +11,9 @@ pub struct ClassifyRequest {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub preset: Option<String>,
     /// An array of strings that you would like to classify.
-    pub inputs: Vec<String>,
+    pub inputs: &'input [String],
     /// An array of ClassifyExamples representing examples and the corresponding label.
-    pub examples: Vec<ClassifyExample>,
+    pub examples: &'input [ClassifyExample<'input>],
 }
 
 #[derive(strum_macros::Display, Serialize, Debug)]
@@ -28,11 +28,11 @@ pub enum ClassifyModel {
 }
 
 #[derive(Serialize, Debug)]
-pub struct ClassifyExample {
+pub struct ClassifyExample<'input> {
     /// The text of the example.
-    pub text: String,
+    pub text: &'input str,
     /// The label that fits the example's text.
-    pub label: String,
+    pub label: &'input str,
 }
 
 #[derive(Deserialize, Debug)]

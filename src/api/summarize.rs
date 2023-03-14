@@ -1,9 +1,9 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Default, Debug)]
-pub struct SummarizeRequest {
+pub struct SummarizeRequest<'input> {
     /// Text to summarize
-    pub text: String,
+    pub text: &'input str,
     /// 'One of `paragraph` or `bullets`, defaults to `paragraph`.
     /// Indicates the style in which the summary will be delivered - in a free form
     /// paragraph or in bullet points.'

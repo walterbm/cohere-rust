@@ -5,7 +5,7 @@ async fn main() {
     let co = Cohere::default();
 
     let request = DetectLanguageRequest {
-        texts: vec!["Hello Cohere!".to_string(), "Hola mis amigos!".to_string()],
+        texts: &["Hello Cohere!".to_string(), "Hola mis amigos!".to_string()],
     };
 
     match co.detect_language(&request).await {

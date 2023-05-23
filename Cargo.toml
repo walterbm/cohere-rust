@@ -13,4 +13,4 @@ thiserror = "1.0"
 tokio = { version = "1", features = ["full"] }
 
 [dev-dependencies]
-mockito = "0.32.3"
+mockito = "1"

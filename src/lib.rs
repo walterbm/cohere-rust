@@ -112,14 +112,19 @@ impl Cohere {
 
         let response = self.client.post(url).json(&payload).send().await?;
 
+        // Check for any API Warnings
+        if let Some(warning) = response.headers().get("X-API-Warning") {
+            eprintln!("Warning: {:?}", warning.as_bytes());
+        }
+
         if response.status().is_client_error() || response.status().is_server_error() {
+            let status = response.status();
+            let text = response.text().await?;
             Err(CohereApiError::ApiError(
-                response.status(),
-                response
-                    .json::<CohereApiErrorResponse>()
-                    .await
+                status,
+                serde_json::from_str::<CohereApiErrorResponse>(&text)
                     .unwrap_or(CohereApiErrorResponse {
-                        message: "Unknown API Error".to_string(),
+                        message: format!("Unknown API Error: {}", text),
                     })
                     .message,
             ))

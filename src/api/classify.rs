@@ -2,11 +2,13 @@ use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
+use super::{EmbedModel, Truncate};
+
 #[derive(Serialize, Default, Debug)]
 pub struct ClassifyRequest<'input> {
     /// An optional string representing the model you'd like to use.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub model: Option<ClassifyModel>,
+    pub model: Option<EmbedModel>,
     /// An optional string representing the ID of a custom playground preset.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub preset: Option<String>,
@@ -14,17 +16,8 @@ pub struct ClassifyRequest<'input> {
     pub inputs: &'input [String],
     /// An array of ClassifyExamples representing examples and the corresponding label.
     pub examples: &'input [ClassifyExample<'input>],
-}
-
-#[derive(strum_macros::Display, Serialize, Debug)]
-pub enum ClassifyModel {
-    #[strum(serialize = "small")]
-    Small,
-    #[strum(serialize = "large")]
-    Large,
-    #[strum(serialize = "multilingual-22-12")]
-    Multilingual2212,
-    Custom(String),
+    /// Specify how the API will handle inputs longer than the maximum token length.
+    pub truncate: Option<Truncate>,
 }
 
 #[derive(Serialize, Debug)]

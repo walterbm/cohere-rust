@@ -1,5 +1,5 @@
-use cohere_rust::api::embed::{EmbedModel, EmbedRequest};
-use cohere_rust::api::Truncate;
+use cohere_rust::api::embed::EmbedRequest;
+use cohere_rust::api::{EmbedModel, Truncate};
 use cohere_rust::Cohere;
 
 #[tokio::main]
@@ -7,7 +7,7 @@ async fn main() {
     let co = Cohere::default();
 
     let request = EmbedRequest {
-        model: Some(EmbedModel::Small),
+        model: Some(EmbedModel::EmbedEnglishLight),
         texts: &["hello".to_string(), "goodbye".to_string()],
         truncate: Truncate::End,
     };

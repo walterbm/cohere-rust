@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use super::Truncate;
+use super::{EmbedModel, Truncate};
 
 #[derive(Serialize, Debug)]
 pub struct EmbedRequest<'input> {
@@ -11,15 +11,6 @@ pub struct EmbedRequest<'input> {
     pub texts: &'input [String],
     /// Specify how the API will handle inputs longer than the maximum token length.
     pub truncate: Truncate,
-}
-
-#[derive(strum_macros::Display, Serialize, Debug)]
-pub enum EmbedModel {
-    #[strum(serialize = "small")]
-    Small,
-    #[strum(serialize = "large")]
-    Large,
-    Custom(String),
 }
 
 #[derive(Deserialize, Debug)]

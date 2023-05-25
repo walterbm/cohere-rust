@@ -4,15 +4,15 @@ use serde::{Deserialize, Serialize};
 pub struct SummarizeRequest<'input> {
     /// Text to summarize
     pub text: &'input str,
-    /// 'One of `paragraph` or `bullets`, defaults to `paragraph`.
+    /// 'One of `paragraph`, `bullets` or `auto`, defaults to `auto`.
     /// Indicates the style in which the summary will be delivered - in a free form
     /// paragraph or in bullet points.'
     #[serde(skip_serializing_if = "Option::is_none")]
     pub format: Option<SummarizeFormat>,
-    /// One of `short`, `medium` or `long`, defaults to `medium`. Indicates the approximate length of the summary.'
+    /// One of `short`, `medium`, `long` or `auto` defaults to `auto`. Indicates the approximate length of the summary.'
     #[serde(skip_serializing_if = "Option::is_none")]
     pub length: Option<SummarizeLength>,
-    /// One of `low`, `medium` or `high`, defaults to `low`. Controls how close to the original text the summary is.
+    /// One of `low`, `medium`, `high` or `auto`, defaults to `auto`. Controls how close to the original text the summary is.
     /// `high` extractiveness summaries will lean towards reusing sentences verbatim, while `low` extractiveness
     /// summaries will tend to paraphrase more.'
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -33,37 +33,56 @@ pub struct SummarizeRequest<'input> {
 #[derive(strum_macros::Display, Serialize, Debug)]
 pub enum SummarizeModel {
     #[strum(serialize = "summarize-medium")]
+    #[serde(rename = "summarize-medium")]
     Medium,
     #[strum(serialize = "summarize-xlarge")]
+    #[serde(rename = "summarize-xlarge")]
     XLarge,
 }
 
 #[derive(strum_macros::Display, Serialize, Debug)]
 pub enum SummarizeLength {
     #[strum(serialize = "short")]
+    #[serde(rename = "short")]
     Short,
     #[strum(serialize = "medium")]
+    #[serde(rename = "medium")]
     Medium,
     #[strum(serialize = "long")]
+    #[serde(rename = "long")]
     Long,
+    #[strum(serialize = "auto")]
+    #[serde(rename = "auto")]
+    Auto,
 }
 
 #[derive(strum_macros::Display, Serialize, Debug)]
 pub enum SummarizeFormat {
     #[strum(serialize = "paragraph")]
+    #[serde(rename = "paragraph")]
     Paragraph,
     #[strum(serialize = "bullets")]
+    #[serde(rename = "bullets")]
     Bullets,
+    #[strum(serialize = "auto")]
+    #[serde(rename = "auto")]
+    Auto,
 }
 
 #[derive(strum_macros::Display, Serialize, Debug)]
 pub enum SummarizeExtractiveness {
     #[strum(serialize = "low")]
+    #[serde(rename = "low")]
     Low,
     #[strum(serialize = "medium")]
+    #[serde(rename = "medium")]
     Medium,
     #[strum(serialize = "high")]
+    #[serde(rename = "high")]
     High,
+    #[strum(serialize = "auto")]
+    #[serde(rename = "auto")]
+    Auto,
 }
 
 #[derive(Deserialize, Debug)]

@@ -1,4 +1,5 @@
 use cohere_rust::api::classify::{ClassifyExample, ClassifyRequest};
+use cohere_rust::api::EmbedModel;
 use cohere_rust::Cohere;
 
 #[tokio::main]
@@ -56,6 +57,7 @@ async fn main() {
     let request = ClassifyRequest {
         examples,
         inputs,
+        model: Some(EmbedModel::EmbedEnglishLight),
         ..Default::default()
     };
 

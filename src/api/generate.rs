@@ -5,11 +5,11 @@ use super::Truncate;
 
 #[derive(Serialize, Default, Debug)]
 pub struct GenerateRequest<'input> {
-    /// An optional string representing the model you'd like to use.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub model: Option<GenerateModel>,
     /// Represents the prompt or text to be completed.
     pub prompt: &'input str,
+    /// optional - The model to use for text generation. Custom models can also be supplied with their full ID.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub model: Option<GenerateModel>,
     /// optional - Denotes the number of tokens to predict per generation.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub max_tokens: Option<u32>,
@@ -24,22 +24,22 @@ pub struct GenerateRequest<'input> {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub num_generations: Option<u8>,
     /// optional - If set to a positive integer, it ensures only the top k most likely tokens are
-    /// considered for generation at each step.
+    /// considered for generation at each step. Defaults to 0 (disabled)
     #[serde(skip_serializing_if = "Option::is_none")]
     pub k: Option<u64>,
     /// optional - If set to a probability 0.0 < p < 1.0, it ensures that only the most likely tokens,
     /// with total probability mass of p, are considered for generation at each step. If both k and
-    /// p are enabled, p acts after k. Max value of 1.0.
+    /// p are enabled, p acts after k. Max value of 1.0. Defaults to 0.75.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub p: Option<f64>,
     /// optional - Can be used to reduce repetitiveness of generated tokens. The higher the value,
     /// the stronger a penalty is applied to previously present tokens, proportional to how many
-    /// times they have already appeared in the prompt or prior generation. Max value of 1.0.
+    /// times they have already appeared in the prompt or prior generation. Max value of 1.0. Defaults to 0.0.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub frequency_penalty: Option<f64>,
     /// optional - Can be used to reduce repetitiveness of generated tokens. Similar to frequency_penalty,
     /// except that this penalty is applied equally to all tokens that have already appeared, regardless
-    /// of their exact frequencies. Max value of 1.0.
+    /// of their exact frequencies. Max value of 1.0. Defaults to 0.0.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub presence_penalty: Option<f64>,
     /// optional - The generated text will be cut at the beginning of the earliest occurrence of an end sequence.
@@ -72,20 +72,31 @@ pub struct GenerateRequest<'input> {
 
 #[derive(strum_macros::Display, Serialize, Debug)]
 pub enum GenerateModel {
-    #[strum(serialize = "medium")]
-    Medium,
-    #[strum(serialize = "xlarge")]
-    XLarge,
+    #[strum(serialize = "command")]
+    #[serde(rename = "command")]
+    Command,
+    #[strum(serialize = "command-light")]
+    #[serde(rename = "command-light")]
+    CommandLight,
+    #[strum(serialize = "command-nightly")]
+    #[serde(rename = "command-nightly")]
+    CommandNightly,
+    #[strum(serialize = "command-light-nightly")]
+    #[serde(rename = "command-light-nightly")]
+    CommandLightNightly,
     Custom(String),
 }
 
 #[derive(strum_macros::Display, Serialize, Debug)]
 pub enum ReturnLikelihoods {
     #[strum(serialize = "GENERATION")]
+    #[serde(rename = "GENERATION")]
     Generation,
     #[strum(serialize = "ALL")]
+    #[serde(rename = "ALL")]
     All,
     #[strum(serialize = "NONE")]
+    #[serde(rename = "NONE")]
     None,
 }
 

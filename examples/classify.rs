@@ -57,7 +57,7 @@ async fn main() {
     let request = ClassifyRequest {
         examples,
         inputs,
-        model: Some(EmbedModel::EmbedEnglishLight),
+        model: Some(EmbedModel::EnglishLight),
         ..Default::default()
     };
 

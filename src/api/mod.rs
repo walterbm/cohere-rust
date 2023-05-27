@@ -27,15 +27,15 @@ pub enum EmbedModel {
     // Lighter and faster english model with an embedding vector of size 1024
     #[strum(serialize = "embed-english-light-v2.0")]
     #[serde(rename = "embed-english-light-v2.0")]
-    EmbedEnglishLight,
+    EnglishLight,
     // Default model with an embedding vector of size 4096
     #[strum(serialize = "embed-english-v2.0")]
     #[serde(rename = "embed-english-v2.0")]
-    EmbedEnglish,
+    English,
     // Multi-language model with an embedding vector of size 768
     #[strum(serialize = "embed-multilingual-v2.0")]
     #[serde(rename = "embed-multilingual-v2.0")]
-    EmbedMultilingual,
+    Multilingual,
     // Custom model
     Custom(String),
 }

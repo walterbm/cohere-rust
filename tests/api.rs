@@ -6,7 +6,7 @@ mod tests {
         api::{
             detect_language::{DetectLanguageResult, DetectLanguageRequest},
             generate::{GenerateRequest, ReturnLikelihoods},
-            Truncate, summarize::{SummarizeRequest, SummarizeLength, SummarizeFormat, SummarizeModel, SummarizeExtractiveness}, classify::{ClassifyRequest, ClassifyExample, Classification, LabelProperties}, embed::EmbedRequest, tokenize::TokenizeRequest, detokenize::DetokenizeRequest,
+            Truncate, summarize::{SummarizeRequest, SummarizeLength, SummarizeFormat, SummarizeModel, SummarizeExtractiveness}, classify::{ClassifyRequest, ClassifyExample, Classification, LabelProperties}, embed::EmbedRequest, tokenize::TokenizeRequest, detokenize::DetokenizeRequest, rerank::{ReRankRequest, ReRankModel, ReRankResult},
         },
         Cohere,
     };
@@ -487,6 +487,104 @@ mod tests {
 
         assert_eq!(vec![34160,974,514,34,1420,69], response.tokens);
         assert_eq!(vec!["token","ize"," me","!"," :","D"], response.token_strings);
+    }
+
+    #[tokio::test]
+
+    async fn test_rerank() {
+        // Create mock server
+        let mut mock_server = mockito::Server::new_async().await;
+        let mock_url = mock_server.url();
+
+        // Create a mock
+        let mock_endpoint = mock_server
+            .mock("POST", "/rerank")
+            .with_status(200)
+            .with_header("content-type", "application/json")
+            .with_body(
+                r#"{
+                    "id": "1004c6d5-873b-4899-9072-6a13c40f19a7",
+                    "results": [
+                        {
+                        "index": 2,
+                        "relevance_score": 0.98005307
+                        },
+                        {
+                        "index": 3,
+                        "relevance_score": 0.27904198
+                        },
+                        {
+                        "index": 0,
+                        "relevance_score": 0.10194652
+                        },
+                        {
+                        "index": 1,
+                        "relevance_score": 0.0721122
+                        }
+                    ],
+                    "meta": {
+                        "api_version": {
+                        "version": "1"
+                        }
+                    }
+                }"#,
+            )
+            .create_async()
+            .await;
+
+        let client = Cohere::new(mock_url, "test-key", "test-version");
+
+        let documents = [
+            "Carson City is the capital city of the American state of Nevada.",
+            "The Commonwealth of the Northern Mariana Islands is a group of islands in the Pacific Ocean. Its capital is Saipan.",
+            "Washington, D.C. (also known as simply Washington or D.C., and officially as the District of Columbia) is the capital of the United States. It is a federal district.",
+            "Capital punishment (the death penalty) has existed in the United States since beforethe United States was a country. As of 2017, capital punishment is legal in 30 of the 50 states.",
+        ];
+
+        let request = ReRankRequest {
+            query: "What is the capital of the United States?",
+            documents: &documents.map(|d| d.to_string()),
+            model: ReRankModel::English,
+            top_n: Some(4),
+            ..Default::default()
+        };
+
+        let response = client
+            .rerank(&request)
+            .await;
+
+        // assert that mock endpoint was called
+        mock_endpoint.assert_async().await;
+
+        println!("{:?}", response);
+
+        assert!(response.is_ok());
+
+        let response = response.unwrap();
+
+        assert_eq!(4, response.len());
+
+        assert_eq!(
+            vec![
+                ReRankResult {
+                    index: 2,
+                    relevance_score: 0.98005307
+                  },
+                  ReRankResult {
+                    index: 3,
+                    relevance_score: 0.27904198
+                  },
+                  ReRankResult {
+                    index: 0,
+                    relevance_score: 0.10194652
+                  },
+                  ReRankResult {
+                    index: 1,
+                    relevance_score: 0.0721122
+                  }
+            ],
+            response
+        );
     }
 
     #[tokio::test]

@@ -59,6 +59,7 @@ For a full breakdown of endpoints and arguments, please consult the [Cohere Docs
 | ---------------- | -------------------- |
 | /generate        | co.generate()        |
 | /embed           | co.embed()           |
+| /rerank          | co.rerank()          |
 | /classify        | co.classify()        |
 | /summarize       | co.summarize()       |
 | /tokenize        | co.tokenize()        |

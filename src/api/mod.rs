@@ -5,6 +5,7 @@ pub mod detect_language;
 pub mod detokenize;
 pub mod embed;
 pub mod generate;
+pub mod rerank;
 pub mod summarize;
 pub mod tokenize;
 

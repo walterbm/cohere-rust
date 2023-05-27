@@ -6,6 +6,7 @@ use api::{
     detokenize::{DetokenizeRequest, DetokenizeResponse},
     embed::{EmbedRequest, EmbedResponse},
     generate::{GenerateRequest, GenerateResponse, Generation},
+    rerank::{ReRankRequest, ReRankResponse, ReRankResult},
     summarize::{SummarizeRequest, SummarizeResponse},
     tokenize::{TokenizeRequest, TokenizeResponse},
 };
@@ -224,6 +225,16 @@ impl Cohere {
         let response = self
             .request::<_, DetectLanguageResponse>("detect-language", request)
             .await?;
+
+        Ok(response.results)
+    }
+
+    /// Takes a query plus an list of texts and return an ordered array with each text assigned a relevance score.
+    pub async fn rerank<'input>(
+        &self,
+        request: &ReRankRequest<'input>,
+    ) -> Result<Vec<ReRankResult>, CohereApiError> {
+        let response = self.request::<_, ReRankResponse>("rerank", request).await?;
 
         Ok(response.results)
     }

@@ -12,7 +12,7 @@ async fn main() {
         max_tokens: Some(20),
         return_likelihoods: Some(ReturnLikelihoods::None),
         truncate: Some(Truncate::End),
-        model: Some(cohere_rust::api::generate::GenerateModel::CommandLightNightly),
+        model: Some(cohere_rust::api::GenerateModel::CommandLightNightly),
         prompt: "Once upon a time in a magical land called",
         ..Default::default()
     };

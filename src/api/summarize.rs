@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+use super::GenerateModel;
+
 #[derive(Serialize, Default, Debug)]
 pub struct SummarizeRequest<'input> {
     /// Text to summarize
@@ -27,17 +29,7 @@ pub struct SummarizeRequest<'input> {
     pub additional_command: Option<String>,
     /// Denotes the summarization model to be used. Defaults to the best performing model
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub model: Option<SummarizeModel>,
-}
-
-#[derive(strum_macros::Display, Serialize, Debug)]
-pub enum SummarizeModel {
-    #[strum(serialize = "summarize-medium")]
-    #[serde(rename = "summarize-medium")]
-    Medium,
-    #[strum(serialize = "summarize-xlarge")]
-    #[serde(rename = "summarize-xlarge")]
-    XLarge,
+    pub model: Option<GenerateModel>,
 }
 
 #[derive(strum_macros::Display, Serialize, Debug)]

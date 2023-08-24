@@ -39,3 +39,20 @@ pub enum EmbedModel {
     // Custom model
     Custom(String),
 }
+
+#[derive(strum_macros::Display, Serialize, Debug)]
+pub enum GenerateModel {
+    #[strum(serialize = "command")]
+    #[serde(rename = "command")]
+    Command,
+    #[strum(serialize = "command-light")]
+    #[serde(rename = "command-light")]
+    CommandLight,
+    #[strum(serialize = "command-nightly")]
+    #[serde(rename = "command-nightly")]
+    CommandNightly,
+    #[strum(serialize = "command-light-nightly")]
+    #[serde(rename = "command-light-nightly")]
+    CommandLightNightly,
+    Custom(String),
+}

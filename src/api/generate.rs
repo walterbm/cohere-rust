@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-use super::Truncate;
+use super::{GenerateModel, Truncate};
 
 #[derive(Serialize, Default, Debug)]
 pub struct GenerateRequest<'input> {
@@ -68,23 +68,6 @@ pub struct GenerateRequest<'input> {
     /// In both cases, input is discarded until the remaining input is exactly the maximum input token length for the model.
     /// If NONE is selected, when the input exceeds the maximum input token length an error will be returned.
     pub truncate: Option<Truncate>,
-}
-
-#[derive(strum_macros::Display, Serialize, Debug)]
-pub enum GenerateModel {
-    #[strum(serialize = "command")]
-    #[serde(rename = "command")]
-    Command,
-    #[strum(serialize = "command-light")]
-    #[serde(rename = "command-light")]
-    CommandLight,
-    #[strum(serialize = "command-nightly")]
-    #[serde(rename = "command-nightly")]
-    CommandNightly,
-    #[strum(serialize = "command-light-nightly")]
-    #[serde(rename = "command-light-nightly")]
-    CommandLightNightly,
-    Custom(String),
 }
 
 #[derive(strum_macros::Display, Serialize, Debug)]

@@ -269,6 +269,7 @@ mod tests {
 
         let request = DetokenizeRequest {
             tokens: &[10104, 12221, 1315, 34, 1420, 69],
+            model: Some(GenerateModel::CommandNightly),
         };
 
         let response = client.detokenize(&request).await;
@@ -499,6 +500,7 @@ mod tests {
 
         let request = TokenizeRequest {
             text: "tokenize me! :D",
+            model: Some(GenerateModel::CommandNightly),
         };
 
         let response = client.tokenize(&request).await;
@@ -630,7 +632,10 @@ mod tests {
 
         let client = Cohere::new(mock_url, "test-key", "test-version");
 
-        let request = TokenizeRequest { text: "" };
+        let request = TokenizeRequest {
+            text: "",
+            model: None,
+        };
 
         let response = client.tokenize(&request).await;
 

@@ -1,6 +1,6 @@
 # Cohere Rust SDK
 
-This crate provided a simplified interface with the [cohere.ai](https://cohere.ai/) API in Rust.
+This crate provides a simplified interface with the [cohere.ai](https://cohere.ai/) API in Rust.
 
 ## Documentation
 

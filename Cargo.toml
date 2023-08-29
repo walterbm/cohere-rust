@@ -1,7 +1,13 @@
 [package]
 name = "cohere-rust"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
+description = "This crate provides a simplified interface with the cohere.ai API in Rust"
+homepage = "https://github.com/walterbm/cohere-rust"
+documentation = "https://docs.rs/cohere-rust"
+license = "MIT"
+
+exclude = ["examples/*", "tests/*"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]

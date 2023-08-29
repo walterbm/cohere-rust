@@ -50,25 +50,3 @@ pub(crate) struct ChatResponse {
     /// Chat response text
     pub text: String,
 }
-
-#[derive(Deserialize, Debug)]
-pub struct Generation {
-    /// Contains the generated text.
-    pub text: String,
-    /// The sum of the log-likelihood of each token in the string.
-    #[serde(default)]
-    pub likelihood: f64,
-    /// Only returned if `return_likelihoods` is not set to NONE.
-    /// The likelihood.
-    #[serde(default)]
-    pub token_likelihoods: Vec<TokenLikelihood>,
-}
-
-#[derive(Deserialize, Debug)]
-pub struct TokenLikelihood {
-    /// The token.
-    pub token: String,
-    /// Refers to the log-likelihood of the token. The first token of a context will not
-    /// have a likelihood.
-    pub likelihood: String,
-}

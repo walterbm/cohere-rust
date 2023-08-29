@@ -1,5 +1,6 @@
 use serde::Serialize;
 
+pub mod chat;
 pub mod classify;
 pub mod detect_language;
 pub mod detokenize;

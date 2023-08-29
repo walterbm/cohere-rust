@@ -58,6 +58,7 @@ For a full breakdown of endpoints and arguments, please consult the [Cohere Docs
 | Cohere Endpoint  | Function             |
 | ---------------- | -------------------- |
 | /generate        | co.generate()        |
+| /chat            | co.chat()            |
 | /embed           | co.embed()           |
 | /rerank          | co.rerank()          |
 | /classify        | co.classify()        |
@@ -69,7 +70,7 @@ For a full breakdown of endpoints and arguments, please consult the [Cohere Docs
 
 ## Responses
 
-All of the endpoint functions will return a Cohere object corresponding to the endpoint (e.g. for generation, it would be `GenerateResponse`). The names of these fields and a detailed breakdown of the response body can be found in the [Cohere Docs](https://docs.cohere.ai/).
+All of the endpoint functions will return a Cohere object corresponding to the endpoint (e.g. for generate, it would be `GenerateResponse`). The names of these fields and a detailed breakdown of the response body can be found in the [Cohere Docs](https://docs.cohere.ai/).
 
 ## Errors
 

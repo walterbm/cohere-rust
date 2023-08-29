@@ -1,6 +1,7 @@
 use std::time::Duration;
 
 use api::{
+    chat::{ChatRequest, ChatResponse},
     classify::{Classification, ClassifyRequest, ClassifyResponse},
     detect_language::{DetectLanguageRequest, DetectLanguageResponse, DetectLanguageResult},
     detokenize::{DetokenizeRequest, DetokenizeResponse},
@@ -156,6 +157,16 @@ impl Cohere {
             .await?;
 
         Ok(response.generations)
+    }
+
+    /// Chat with Cohere's LLM
+    pub async fn chat<'input>(
+        &self,
+        request: &ChatRequest<'input>,
+    ) -> Result<String, CohereApiError> {
+        let response = self.request::<_, ChatResponse>("chat", request).await?;
+
+        Ok(response.text)
     }
 
     /// Returns text embeddings.

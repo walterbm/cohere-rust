@@ -4,6 +4,7 @@ mod tests {
 
     use cohere_rust::{
         api::{
+            chat::{ChatRequest, ChatResponse, ChatStreamResponse},
             classify::{Classification, ClassifyExample, ClassifyRequest, LabelProperties},
             detect_language::{DetectLanguageRequest, DetectLanguageResult},
             detokenize::DetokenizeRequest,
@@ -406,6 +407,96 @@ mod tests {
         assert_eq!(1, response.len());
 
         assert_eq!(" Silicon Valley, there was a very unusual sight: An actual new idea. It was a strange sight".to_string(), response[0].text);
+    }
+
+    #[tokio::test]
+    async fn test_chat() {
+        // Create mock server
+        let mut mock_server = mockito::Server::new_async().await;
+        let mock_url = mock_server.url();
+
+        let mock_chat_stream = [
+            "{\"is_finished\":false,\"event_type\":\"stream-start\",\"generation_id\":\"0c9cb118-f841-4588-b835-f9a4fe2c572e\"}",
+            "{\"is_finished\":false,\"event_type\":\"text-generation\",\"text\":\" Thomas\"}",
+            "{\"is_finished\":false,\"event_type\":\"text-generation\",\"text\":\" P\"}",
+            "{\"is_finished\":false,\"event_type\":\"text-generation\",\"text\":\".\"}",
+            "{\"is_finished\":false,\"event_type\":\"text-generation\",\"text\":\" Frank\"}",
+            "{\"is_finished\":false,\"event_type\":\"text-generation\",\"text\":\".\"}",
+            "{\"is_finished\":true,\"event_type\":\"stream-end\",\"response\":{\"response_id\":\"feab94ed-789b-42f2-8f4f-c49d56d28734\",\"text\":\"Thomas P. Frank.\",\"generation_id\":\"0c9cb118-f841-4588-b835-f9a4fe2c572e\",\"token_count\":{\"prompt_tokens\":71,\"response_tokens\":17,\"total_tokens\":88,\"billed_tokens\":77}},\"finish_reason\":\"COMPLETE\"}",
+        ];
+
+        // Create a mock
+        let mock_endpoint = mock_server
+            .mock("POST", "/chat")
+            .with_status(200)
+            .with_header("content-type", "application/json")
+            .with_chunked_body(move |w| {
+                for chunk in mock_chat_stream.iter() {
+                    w.write_all(chunk.as_bytes()).unwrap();
+                }
+                Ok(())
+            })
+            .create_async()
+            .await;
+
+        let client = Cohere::new(mock_url, "test-key", "test-version");
+
+        let response = client
+            .chat(&ChatRequest {
+                message: "who wrote the book where is my cheese?",
+                ..Default::default()
+            })
+            .await;
+
+        // assert that mock endpoint was called
+        mock_endpoint.assert_async().await;
+
+        assert!(response.is_ok());
+
+        let mut stream = response.unwrap();
+        let expected_messages = [
+            ChatStreamResponse::ChatStreamStart {
+                generation_id: "0c9cb118-f841-4588-b835-f9a4fe2c572e".to_string(),
+                is_finished: false,
+            },
+            ChatStreamResponse::ChatTextGeneration {
+                is_finished: false,
+                text: " Thomas".to_string(),
+            },
+            ChatStreamResponse::ChatTextGeneration {
+                is_finished: false,
+                text: " P".to_string(),
+            },
+            ChatStreamResponse::ChatTextGeneration {
+                is_finished: false,
+                text: ".".to_string(),
+            },
+            ChatStreamResponse::ChatTextGeneration {
+                is_finished: false,
+                text: " Frank".to_string(),
+            },
+            ChatStreamResponse::ChatTextGeneration {
+                is_finished: false,
+                text: ".".to_string(),
+            },
+            ChatStreamResponse::ChatStreamEnd {
+                finish_reason: "COMPLETE".to_string(),
+                is_finished: true,
+                response: ChatResponse {
+                    generation_id: "0c9cb118-f841-4588-b835-f9a4fe2c572e".to_string(),
+                    response_id: "feab94ed-789b-42f2-8f4f-c49d56d28734".to_string(),
+                    text: "Thomas P. Frank.".to_string(),
+                },
+            },
+        ];
+
+        let mut count: usize = 0;
+        while let Some(message) = stream.recv().await {
+            assert!(message.is_ok());
+            assert_eq!(expected_messages[count], message.unwrap());
+            count += 1;
+        }
+        assert_eq!(expected_messages.len(), count);
     }
 
     #[tokio::test]

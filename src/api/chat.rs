@@ -52,14 +52,14 @@ pub enum CitationQuality {
     Fast,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, PartialEq)]
 pub struct ChatResponse {
     pub generation_id: String,
     pub response_id: String,
     pub text: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, PartialEq)]
 #[serde(tag = "event_type")]
 pub enum ChatStreamResponse {
     #[serde(rename = "stream-start")]

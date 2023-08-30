@@ -13,7 +13,14 @@ async fn main() {
     };
 
     match co.chat(&request).await {
-        Ok(r) => println!("Chat response: {:?}", r),
+        Ok(mut rx) => {
+            while let Some(message) = rx.recv().await {
+                match message {
+                    Ok(message) => println!("Chat response: {:#?}", message),
+                    Err(e) => println!("Chat error! {:#?}", e),
+                }
+            }
+        }
         Err(e) => {
             println!("Chat failed! {}", e)
         }

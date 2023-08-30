@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use api::{
-    chat::{ChatRequest, ChatResponse},
+    chat::{ChatRequest, ChatStreamRequest, ChatStreamResponse},
     classify::{Classification, ClassifyRequest, ClassifyResponse},
     detect_language::{DetectLanguageRequest, DetectLanguageResponse, DetectLanguageResult},
     detokenize::{DetokenizeRequest, DetokenizeResponse},
@@ -12,9 +12,11 @@ use api::{
     tokenize::{TokenizeRequest, TokenizeResponse},
 };
 use reqwest::{header, ClientBuilder, StatusCode, Url};
+use tokio::sync::mpsc::{channel, Receiver};
 
 const COHERE_API_BASE_URL: &str = "https://api.cohere.ai";
 const COHERE_API_LATEST_VERSION: &str = "2022-12-06";
+const COHERE_API_V1: &str = "v1";
 
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use thiserror::Error;
@@ -31,6 +33,14 @@ pub enum CohereApiError {
     InvalidApiKey,
     #[error("Unknown error")]
     Unknown,
+}
+
+#[derive(Error, Debug)]
+pub enum CohereStreamError {
+    #[error("Unexpected deserialization error")]
+    RequestError(#[from] serde_json::error::Error),
+    #[error("Unknown error `{0}`")]
+    Unknown(String),
 }
 
 /// Cohere Rust SDK to build natural language understanding and generation into your product with a few lines of code.
@@ -53,7 +63,11 @@ impl Default for Cohere {
     fn default() -> Self {
         let api_key = std::env::var("COHERE_API_KEY")
             .expect("please provide a Cohere API key with the 'COHERE_API_KEY' env variable");
-        Cohere::new(COHERE_API_BASE_URL, api_key, COHERE_API_LATEST_VERSION)
+        Cohere::new(
+            format!("{COHERE_API_BASE_URL}/{COHERE_API_V1}"),
+            api_key,
+            COHERE_API_LATEST_VERSION,
+        )
     }
 }
 
@@ -97,7 +111,7 @@ impl Cohere {
         let client = ClientBuilder::new()
             .default_headers(headers)
             .use_rustls_tls()
-            .timeout(Duration::from_secs(5))
+            .timeout(Duration::from_secs(90))
             .build()
             .expect("failed to initialize HTTP client!");
 
@@ -135,6 +149,38 @@ impl Cohere {
         }
     }
 
+    async fn request_stream<Request: Serialize, Response: DeserializeOwned + Send + 'static>(
+        &self,
+        route: &'static str,
+        payload: Request,
+    ) -> Result<Receiver<Result<Response, CohereStreamError>>, CohereApiError> {
+        let url =
+            Url::parse(&format!("{}/{route}", self.api_url)).expect("api url should be valid");
+
+        let mut response = self.client.post(url).json(&payload).send().await?;
+
+        let (tx, rx) = channel::<Result<Response, CohereStreamError>>(32);
+        tokio::spawn(async move {
+            while let Ok(Some(chunk)) = response.chunk().await {
+                if chunk.is_empty() {
+                    break;
+                }
+                match serde_json::from_slice::<Response>(&chunk) {
+                    Ok(v) => tx
+                        .send(Ok(v))
+                        .await
+                        .expect("Failed to send message to channel"),
+                    Err(e) => tx
+                        .send(Err(CohereStreamError::from(e)))
+                        .await
+                        .expect("Failed to send error to channel"),
+                }
+            }
+        });
+
+        return Ok(rx);
+    }
+
     /// Verify that the Cohere API key being used is valid
     pub async fn check_api_key(&self) -> Result<(), CohereApiError> {
         let response = self
@@ -163,10 +209,16 @@ impl Cohere {
     pub async fn chat<'input>(
         &self,
         request: &ChatRequest<'input>,
-    ) -> Result<String, CohereApiError> {
-        let response = self.request::<_, ChatResponse>("chat", request).await?;
+    ) -> Result<Receiver<Result<ChatStreamResponse, CohereStreamError>>, CohereApiError> {
+        let stream_request = ChatStreamRequest {
+            request,
+            stream: true,
+        };
+        let response = self
+            .request_stream::<_, ChatStreamResponse>("chat", stream_request)
+            .await?;
 
-        Ok(response.text)
+        Ok(response)
     }
 
     /// Returns text embeddings.

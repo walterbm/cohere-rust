@@ -25,6 +25,13 @@ pub struct ChatRequest<'input> {
     pub conversation_id: Option<String>,
 }
 
+#[derive(Serialize, Debug)]
+pub(crate) struct ChatStreamRequest<'input> {
+    #[serde(flatten)]
+    pub request: &'input ChatRequest<'input>,
+    pub stream: bool,
+}
+
 #[derive(strum_macros::Display, Serialize, Debug)]
 pub enum PromptTruncation {
     #[strum(serialize = "AUTO")]
@@ -46,7 +53,26 @@ pub enum CitationQuality {
 }
 
 #[derive(Deserialize, Debug)]
-pub(crate) struct ChatResponse {
-    /// Chat response text
+pub struct ChatResponse {
+    pub generation_id: String,
+    pub response_id: String,
     pub text: String,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(tag = "event_type")]
+pub enum ChatStreamResponse {
+    #[serde(rename = "stream-start")]
+    ChatStreamStart {
+        generation_id: String,
+        is_finished: bool,
+    },
+    #[serde(rename = "text-generation")]
+    ChatTextGeneration { is_finished: bool, text: String },
+    #[serde(rename = "stream-end")]
+    ChatStreamEnd {
+        finish_reason: String,
+        is_finished: bool,
+        response: ChatResponse,
+    },
 }

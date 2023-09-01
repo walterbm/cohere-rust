@@ -178,7 +178,7 @@ impl Cohere {
             }
         });
 
-        return Ok(rx);
+        Ok(rx)
     }
 
     /// Verify that the Cohere API key being used is valid

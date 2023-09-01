@@ -51,7 +51,7 @@ jobs:
       - name: rust toolchain
         run: rustup show active-toolchain; cargo --version; rustc --version
       - name: cargo clippy
-        run: cargo clippy --message-format=json | cargo-action-fmt
+        run: cargo clippy --message-format=json -- -Dwarnings | cargo-action-fmt
 
   rustfmt:
     runs-on: ubuntu-latest

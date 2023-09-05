@@ -15,7 +15,6 @@ use reqwest::{header, ClientBuilder, StatusCode, Url};
 use tokio::sync::mpsc::{channel, Receiver};
 
 const COHERE_API_BASE_URL: &str = "https://api.cohere.ai";
-const COHERE_API_LATEST_VERSION: &str = "2022-12-06";
 const COHERE_API_V1: &str = "v1";
 
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
@@ -63,23 +62,14 @@ impl Default for Cohere {
     fn default() -> Self {
         let api_key = std::env::var("COHERE_API_KEY")
             .expect("please provide a Cohere API key with the 'COHERE_API_KEY' env variable");
-        Cohere::new(
-            format!("{COHERE_API_BASE_URL}/{COHERE_API_V1}"),
-            api_key,
-            COHERE_API_LATEST_VERSION,
-        )
+        Cohere::new(format!("{COHERE_API_BASE_URL}/{COHERE_API_V1}"), api_key)
     }
 }
 
 impl Cohere {
-    pub fn new<U: Into<String>, K: Into<String>, V: Into<String>>(
-        api_url: U,
-        api_key: K,
-        version: V,
-    ) -> Self {
+    pub fn new<U: Into<String>, K: Into<String>>(api_url: U, api_key: K) -> Self {
         let api_url: String = api_url.into();
         let api_key: String = api_key.into();
-        let version: String = version.into();
 
         let mut headers = header::HeaderMap::new();
 
@@ -87,12 +77,6 @@ impl Cohere {
             .expect("failed to construct authorization header!");
         authorization.set_sensitive(true);
         headers.insert(header::AUTHORIZATION, authorization);
-
-        headers.insert(
-            "Cohere-Version",
-            header::HeaderValue::from_str(&version)
-                .expect("failed to construct cohere version header!"),
-        );
 
         headers.insert(
             "Request-Source",
@@ -130,7 +114,7 @@ impl Cohere {
 
         // Check for any API Warnings
         if let Some(warning) = response.headers().get("X-API-Warning") {
-            eprintln!("Warning: {:?}", warning.as_bytes());
+            eprintln!("Warning: {:?}", String::from_utf8_lossy(warning.as_bytes()));
         }
 
         if response.status().is_client_error() || response.status().is_server_error() {

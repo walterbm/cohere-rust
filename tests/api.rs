@@ -74,7 +74,7 @@ mod tests {
             .create_async()
             .await;
 
-        let client = Cohere::new(mock_url, "test-key", "test-version");
+        let client = Cohere::new(mock_url, "test-key");
 
         let response = client
             .classify(&ClassifyRequest {
@@ -210,7 +210,7 @@ mod tests {
             .create_async()
             .await;
 
-        let client = Cohere::new(mock_url, "test-key", "test-version");
+        let client = Cohere::new(mock_url, "test-key");
 
         let request = DetectLanguageRequest {
             texts: &["Hello Cohere!".to_string(), "Hola mis amigos!".to_string()],
@@ -266,7 +266,7 @@ mod tests {
             .create_async()
             .await;
 
-        let client = Cohere::new(mock_url, "test-key", "test-version");
+        let client = Cohere::new(mock_url, "test-key");
 
         let request = DetokenizeRequest {
             tokens: &[10104, 12221, 1315, 34, 1420, 69],
@@ -332,7 +332,7 @@ mod tests {
             .create_async()
             .await;
 
-        let client = Cohere::new(mock_url, "test-key", "test-version");
+        let client = Cohere::new(mock_url, "test-key");
 
         let request = EmbedRequest {
             model: None,
@@ -385,7 +385,7 @@ mod tests {
             .create_async()
             .await;
 
-        let client = Cohere::new(mock_url, "test-key", "test-version");
+        let client = Cohere::new(mock_url, "test-key");
 
         let response = client
             .generate(&GenerateRequest {
@@ -439,7 +439,7 @@ mod tests {
             .create_async()
             .await;
 
-        let client = Cohere::new(mock_url, "test-key", "test-version");
+        let client = Cohere::new(mock_url, "test-key");
 
         let response = client
             .chat(&ChatRequest {
@@ -524,7 +524,7 @@ mod tests {
             .create_async()
             .await;
 
-        let client = Cohere::new(mock_url, "test-key", "test-version");
+        let client = Cohere::new(mock_url, "test-key");
 
         let response = client
             .summarize(&SummarizeRequest {
@@ -587,7 +587,7 @@ mod tests {
             .create_async()
             .await;
 
-        let client = Cohere::new(mock_url, "test-key", "test-version");
+        let client = Cohere::new(mock_url, "test-key");
 
         let request = TokenizeRequest {
             text: "tokenize me! :D",
@@ -653,7 +653,7 @@ mod tests {
             .create_async()
             .await;
 
-        let client = Cohere::new(mock_url, "test-key", "test-version");
+        let client = Cohere::new(mock_url, "test-key");
 
         let documents = [
             "Carson City is the capital city of the American state of Nevada.",
@@ -721,7 +721,7 @@ mod tests {
             .create_async()
             .await;
 
-        let client = Cohere::new(mock_url, "test-key", "test-version");
+        let client = Cohere::new(mock_url, "test-key");
 
         let request = TokenizeRequest {
             text: "",

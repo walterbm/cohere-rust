@@ -23,6 +23,22 @@ pub struct ChatRequest<'input> {
     /// If a conversation with this id does not already exist, a new conversation will be created.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub conversation_id: Option<String>,
+    /// optional - A list of previous messages between the user and the model,
+    /// meant to give the model conversational context for responding to the user's message.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub chat_history: Option<Vec<ChatMessage>>,
+    // optional - When specified, the default Cohere preamble will be replaced with the provided one.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub preamble_override: Option<String>,
+}
+
+#[derive(Serialize, Debug, PartialEq)]
+#[serde(tag = "role")]
+pub enum ChatMessage {
+    #[serde(rename = "CHATBOT")]
+    Chatbot { message: String },
+    #[serde(rename = "USER")]
+    User { message: String },
 }
 
 #[derive(Serialize, Debug)]

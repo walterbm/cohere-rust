@@ -1,4 +1,4 @@
-use cohere_rust::api::chat::ChatRequest;
+use cohere_rust::api::chat::{ChatMessage, ChatRequest};
 use cohere_rust::api::GenerateModel;
 use cohere_rust::Cohere;
 
@@ -7,8 +7,16 @@ async fn main() {
     let co = Cohere::default();
 
     let request = ChatRequest {
-        message: "Hello! Tell me about Cohere.",
+        message: "Tell me more.",
         model: Some(GenerateModel::CommandNightly),
+        chat_history: Some(vec![
+            ChatMessage::User {
+                message: "Hello! Tell me about Cohere.".to_string(),
+            },
+            ChatMessage::Chatbot {
+                message: "Cohere is a startup based in Toronto.".to_string(),
+            },
+        ]),
         ..Default::default()
     };
 

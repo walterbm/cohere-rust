@@ -1,6 +1,6 @@
 [package]
 name = "cohere-rust"
-version = "0.5.1"
+version = "0.5.2"
 edition = "2021"
 description = "This crate provides a simplified interface with the cohere.ai API in Rust"
 homepage = "https://github.com/walterbm/cohere-rust"

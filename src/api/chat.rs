@@ -26,13 +26,13 @@ pub struct ChatRequest<'input> {
     /// optional - A list of previous messages between the user and the model,
     /// meant to give the model conversational context for responding to the user's message.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub chat_history: Option<Vec<ChatMessage>>,
+    pub chat_history: Option<&'input Vec<ChatMessage>>,
     // optional - When specified, the default Cohere preamble will be replaced with the provided one.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub preamble_override: Option<String>,
 }
 
-#[derive(Serialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 #[serde(tag = "role")]
 pub enum ChatMessage {
     #[serde(rename = "CHATBOT")]

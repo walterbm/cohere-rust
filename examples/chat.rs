@@ -6,17 +6,19 @@ use cohere_rust::Cohere;
 async fn main() {
     let co = Cohere::default();
 
+    let chat_history = vec![
+        ChatMessage::User {
+            message: "Hello! Tell me about Cohere.".to_string(),
+        },
+        ChatMessage::Chatbot {
+            message: "Cohere is a startup based in Toronto.".to_string(),
+        },
+    ];
+
     let request = ChatRequest {
         message: "Tell me more.",
         model: Some(GenerateModel::CommandNightly),
-        chat_history: Some(vec![
-            ChatMessage::User {
-                message: "Hello! Tell me about Cohere.".to_string(),
-            },
-            ChatMessage::Chatbot {
-                message: "Cohere is a startup based in Toronto.".to_string(),
-            },
-        ]),
+        chat_history: Some(&chat_history),
         ..Default::default()
     };
 

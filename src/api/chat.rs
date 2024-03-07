@@ -16,9 +16,6 @@ pub struct ChatRequest<'input> {
     /// optional - A non-negative float that tunes the degree of randomness in generation.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub temperature: Option<f64>,
-    /// optional - Dictates the approach taken to generating citations during RAG chat.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub citation_quality: Option<CitationQuality>,
     /// optional - Previous conversations can be stored and resumed by providing the conversation's identifier.
     /// If a conversation with this id does not already exist, a new conversation will be created.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -29,7 +26,13 @@ pub struct ChatRequest<'input> {
     pub chat_history: Option<&'input Vec<ChatMessage>>,
     // optional - When specified, the default Cohere preamble will be replaced with the provided one.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub preamble_override: Option<String>,
+    pub preamble: Option<String>,
+    // optional - The maximum number of tokens the model will generate as part of the response.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub max_tokens: Option<u64>,
+    // optional - Ensures only the top k most likely tokens are considered for generation at each step
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub k: Option<u64>,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]

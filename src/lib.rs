@@ -16,6 +16,7 @@ use tokio::sync::mpsc::{channel, Receiver};
 
 const COHERE_API_BASE_URL: &str = "https://api.cohere.ai";
 const COHERE_API_V1: &str = "v1";
+const COHERE_API_TIMEOUT: Duration = Duration::from_secs(120);
 
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use thiserror::Error;
@@ -95,7 +96,7 @@ impl Cohere {
         let client = ClientBuilder::new()
             .default_headers(headers)
             .use_rustls_tls()
-            .timeout(Duration::from_secs(90))
+            .timeout(COHERE_API_TIMEOUT)
             .build()
             .expect("failed to initialize HTTP client!");
 

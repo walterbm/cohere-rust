@@ -61,4 +61,4 @@ jobs:
       - name: rust toolchain
         run: rustup show active-toolchain; cargo --version; rustc --version
       - name: cargo fmt
-        run: cargo fmt --check --message-format=json | cargo-action-fmt
+        run: cargo fmt --check | cargo-action-fmt

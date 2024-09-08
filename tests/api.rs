@@ -637,8 +637,8 @@ mod tests {
         let mut mock_server = mockito::Server::new_async().await;
         let mock_url = mock_server.url();
 
-         // Create a mock
-         let mock_endpoint = mock_server
+        // Create a mock
+        let mock_endpoint = mock_server
             .mock("POST", "/chat")
             .with_status(429)
             .with_header("content-type", "application/json")
@@ -655,13 +655,13 @@ mod tests {
             })
             .await;
 
-       // assert that mock endpoint was called
-       mock_endpoint.assert_async().await;
+        // assert that mock endpoint was called
+        mock_endpoint.assert_async().await;
 
-       assert!(response.is_err());
+        assert!(response.is_err());
 
-       let response = response.err().unwrap();
+        let response = response.err().unwrap();
 
-       assert_eq!("API request failed with status code `429 Too Many Requests` and error message `You are using a Trial key, which is limited to 10 API calls / minute.`", response.to_string());
+        assert_eq!("API request failed with status code `429 Too Many Requests` and error message `You are using a Trial key, which is limited to 10 API calls / minute.`", response.to_string());
     }
 }

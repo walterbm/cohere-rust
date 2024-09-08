@@ -168,18 +168,16 @@ impl Cohere {
     async fn parse_error(&self, response: reqwest::Response) -> CohereApiError {
         let status = response.status();
         let text = response.text().await;
-        match text{
+        match text {
             Err(_) => CohereApiError::Unknown,
-            Ok(text) => {
-                CohereApiError::ApiError(
-                    status,
-                    serde_json::from_str::<CohereApiErrorResponse>(&text)
-                        .unwrap_or(CohereApiErrorResponse {
-                            message: format!("Unknown API Error: {}", text),
-                        })
-                        .message,
-                )
-            },
+            Ok(text) => CohereApiError::ApiError(
+                status,
+                serde_json::from_str::<CohereApiErrorResponse>(&text)
+                    .unwrap_or(CohereApiErrorResponse {
+                        message: format!("Unknown API Error: {}", text),
+                    })
+                    .message,
+            ),
         }
     }
 

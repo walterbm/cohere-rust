@@ -11,7 +11,7 @@ pub struct ReRankRequest<'input> {
     /// The number of results to return, defaults to the length of the documents.
     pub top_n: Option<u64>,
     // The maximum number of chunks to derive from each document.
-    pub max_chunks_per_doc: Option<u64>,   
+    pub max_chunks_per_doc: Option<u64>,
 }
 
 #[derive(strum_macros::Display, Serialize, Debug, Default)]

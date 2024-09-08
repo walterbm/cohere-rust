@@ -12,9 +12,9 @@ use api::{
 use reqwest::{header, ClientBuilder, StatusCode, Url};
 use tokio::sync::mpsc::{channel, Receiver};
 
-const COHERE_API_BASE_URL: &str = "https://api.cohere.ai";
+const COHERE_API_BASE_URL: &str = "https://api.cohere.com";
 const COHERE_API_V1: &str = "v1";
-const COHERE_API_TIMEOUT: Duration = Duration::from_secs(120);
+const COHERE_API_TIMEOUT: Duration = Duration::from_secs(240);
 
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use thiserror::Error;

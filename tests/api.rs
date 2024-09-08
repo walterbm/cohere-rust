@@ -356,13 +356,13 @@ mod tests {
         let mock_url = mock_server.url();
 
         let mock_chat_stream = [
-            "{\"is_finished\":false,\"event_type\":\"stream-start\",\"generation_id\":\"0c9cb118-f841-4588-b835-f9a4fe2c572e\"}",
-            "{\"is_finished\":false,\"event_type\":\"text-generation\",\"text\":\" Thomas\"}",
-            "{\"is_finished\":false,\"event_type\":\"text-generation\",\"text\":\" P\"}",
-            "{\"is_finished\":false,\"event_type\":\"text-generation\",\"text\":\".\"}",
-            "{\"is_finished\":false,\"event_type\":\"text-generation\",\"text\":\" Frank\"}",
-            "{\"is_finished\":false,\"event_type\":\"text-generation\",\"text\":\".\"}",
-            "{\"is_finished\":true,\"event_type\":\"stream-end\",\"response\":{\"response_id\":\"feab94ed-789b-42f2-8f4f-c49d56d28734\",\"text\":\"Thomas P. Frank.\",\"generation_id\":\"0c9cb118-f841-4588-b835-f9a4fe2c572e\",\"token_count\":{\"prompt_tokens\":71,\"response_tokens\":17,\"total_tokens\":88,\"billed_tokens\":77}},\"finish_reason\":\"COMPLETE\"}",
+            "{\"is_finished\":false,\"event_type\":\"stream-start\",\"generation_id\":\"0c9cb118-f841-4588-b835-f9a4fe2c572e\"}\n",
+            "{\"is_finished\":false,\"event_type\":\"text-generation\",\"text\":\" Thomas\"}\n",
+            "{\"is_finished\":false,\"event_type\":\"text-generation\",\"text\":\" P\"}\n",
+            "{\"is_finished\":false,\"event_type\":\"text-generation\",\"text\":\".\"}\n",
+            "{\"is_finished\":false,\"event_type\":\"text-generation\",\"text\":\" Frank\"}\n",
+            "{\"is_finished\":false,\"event_type\":\"text-generation\",\"text\":\".\"}\n",
+            "{\"is_finished\":true,\"event_type\":\"stream-end\",\"response\":{\"response_id\":\"feab94ed-789b-42f2-8f4f-c49d56d28734\",\"text\":\"Thomas P. Frank.\",\"generation_id\":\"0c9cb118-f841-4588-b835-f9a4fe2c572e\",\"token_count\":{\"prompt_tokens\":71,\"response_tokens\":17,\"total_tokens\":88,\"billed_tokens\":77}},\"finish_reason\":\"COMPLETE\"}\n",
         ];
 
         // Create a mock

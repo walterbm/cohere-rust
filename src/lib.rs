@@ -144,11 +144,16 @@ impl Cohere {
 
         let (tx, rx) = channel::<Result<Response, CohereStreamError>>(32);
         tokio::spawn(async move {
+            let mut buf = bytes::BytesMut::with_capacity(1024);
             while let Ok(Some(chunk)) = response.chunk().await {
                 if chunk.is_empty() {
                     break;
                 }
-                match serde_json::from_slice::<Response>(&chunk) {
+                buf.extend_from_slice(&chunk);
+                if !chunk.ends_with(b"\n") {
+                    continue;
+                }
+                match serde_json::from_slice::<Response>(&buf) {
                     Ok(v) => tx
                         .send(Ok(v))
                         .await
@@ -158,6 +163,7 @@ impl Cohere {
                         .await
                         .expect("Failed to send error to channel"),
                 }
+                buf.clear()
             }
         });
 

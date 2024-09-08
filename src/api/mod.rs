@@ -23,18 +23,24 @@ pub enum Truncate {
 
 #[derive(strum_macros::Display, Serialize, Debug)]
 pub enum EmbedModel {
-    // Lighter and faster english model with an embedding vector of size 1024
     #[strum(serialize = "embed-english-light-v2.0")]
     #[serde(rename = "embed-english-light-v2.0")]
-    EnglishLight,
-    // Default model with an embedding vector of size 4096
+    EnglishLightV2,
     #[strum(serialize = "embed-english-v2.0")]
     #[serde(rename = "embed-english-v2.0")]
-    English,
-    // Multi-language model with an embedding vector of size 768
+    EnglishV2,
     #[strum(serialize = "embed-multilingual-v2.0")]
     #[serde(rename = "embed-multilingual-v2.0")]
-    Multilingual,
+    MultilingualV2,
+    #[strum(serialize = "embed-english-light-v3.0")]
+    #[serde(rename = "embed-english-light-v3.0")]
+    EnglishLightV3,
+    #[strum(serialize = "embed-english-v3.0")]
+    #[serde(rename = "embed-english-v3.0")]
+    EnglishV3,
+    #[strum(serialize = "embed-multilingual-v3.0")]
+    #[serde(rename = "embed-multilingual-v3.0")]
+    MultilingualV3,
     // Custom model
     Custom(String),
 }
@@ -47,11 +53,20 @@ pub enum GenerateModel {
     #[strum(serialize = "command-light")]
     #[serde(rename = "command-light")]
     CommandLight,
+    #[strum(serialize = "command-r")]
+    #[serde(rename = "command-r")]
+    CommandR,
+    #[strum(serialize = "command-r-plus")]
+    #[serde(rename = "command-r-plus")]
+    CommandRPlus,
+    #[strum(serialize = "command-r-08-2024")]
+    #[serde(rename = "command-r-08-2024")]
+    CommandR082024,
+    #[strum(serialize = "command-r-plus-08-2024")]
+    #[serde(rename = "command-r-plus-08-2024")]
+    CommandRPlus082024,
     #[strum(serialize = "command-nightly")]
     #[serde(rename = "command-nightly")]
     CommandNightly,
-    #[strum(serialize = "command-light-nightly")]
-    #[serde(rename = "command-light-nightly")]
-    CommandLightNightly,
     Custom(String),
 }

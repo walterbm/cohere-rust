@@ -17,7 +17,7 @@ async fn main() {
     let request = ReRankRequest {
         query: "What is the capital of the United States?",
         documents: &documents.map(|d| d.to_string()),
-        model: ReRankModel::English,
+        model: ReRankModel::EnglishV3,
         top_n: Some(2),
         ..Default::default()
     };

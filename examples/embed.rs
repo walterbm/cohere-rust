@@ -7,7 +7,7 @@ async fn main() {
     let co = Cohere::default();
 
     let request = EmbedRequest {
-        model: Some(EmbedModel::EnglishLight),
+        model: Some(EmbedModel::EnglishLightV2),
         texts: &["hello".to_string(), "goodbye".to_string()],
         truncate: Truncate::End,
     };

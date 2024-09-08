@@ -556,7 +556,7 @@ mod tests {
         let request = ReRankRequest {
             query: "What is the capital of the United States?",
             documents: &documents.map(|d| d.to_string()),
-            model: ReRankModel::English,
+            model: ReRankModel::EnglishV2,
             top_n: Some(4),
             ..Default::default()
         };

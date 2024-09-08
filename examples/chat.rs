@@ -18,7 +18,7 @@ async fn main() {
     let request = ChatRequest {
         message: "Tell me more.",
         preamble: Some("Reply as if you were a Shakespearean actor".to_string()),
-        model: Some(GenerateModel::CommandNightly),
+        model: Some(GenerateModel::CommandR082024),
         chat_history: Some(&chat_history),
         ..Default::default()
     };

@@ -630,4 +630,38 @@ mod tests {
 
         assert_eq!("API request failed with status code `500 Internal Server Error` and error message `invalid request: inputs cannot be empty`", response.to_string());
     }
+
+    #[tokio::test]
+    async fn test_streaming_api_error() {
+        // Create mock server
+        let mut mock_server = mockito::Server::new_async().await;
+        let mock_url = mock_server.url();
+
+         // Create a mock
+         let mock_endpoint = mock_server
+            .mock("POST", "/chat")
+            .with_status(429)
+            .with_header("content-type", "application/json")
+            .with_body(r#"{"message":"You are using a Trial key, which is limited to 10 API calls / minute."}"#)
+            .create_async()
+            .await;
+
+        let client = Cohere::new(mock_url, "test-key");
+
+        let response = client
+            .chat(&ChatRequest {
+                message: "who wrote the book where is my cheese?",
+                ..Default::default()
+            })
+            .await;
+
+       // assert that mock endpoint was called
+       mock_endpoint.assert_async().await;
+
+       assert!(response.is_err());
+
+       let response = response.err().unwrap();
+
+       assert_eq!("API request failed with status code `429 Too Many Requests` and error message `You are using a Trial key, which is limited to 10 API calls / minute.`", response.to_string());
+    }
 }

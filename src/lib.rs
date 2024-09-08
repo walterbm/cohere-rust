@@ -117,16 +117,7 @@ impl Cohere {
         }
 
         if response.status().is_client_error() || response.status().is_server_error() {
-            let status = response.status();
-            let text = response.text().await?;
-            Err(CohereApiError::ApiError(
-                status,
-                serde_json::from_str::<CohereApiErrorResponse>(&text)
-                    .unwrap_or(CohereApiErrorResponse {
-                        message: format!("Unknown API Error: {}", text),
-                    })
-                    .message,
-            ))
+            Err(self.parse_error(response).await)
         } else {
             Ok(response.json::<Response>().await?)
         }
@@ -141,6 +132,10 @@ impl Cohere {
             Url::parse(&format!("{}/{route}", self.api_url)).expect("api url should be valid");
 
         let mut response = self.client.post(url).json(&payload).send().await?;
+
+        if response.status().is_client_error() || response.status().is_server_error() {
+            return Err(self.parse_error(response).await);
+        }
 
         let (tx, rx) = channel::<Result<Response, CohereStreamError>>(32);
         tokio::spawn(async move {
@@ -168,6 +163,24 @@ impl Cohere {
         });
 
         Ok(rx)
+    }
+
+    async fn parse_error(&self, response: reqwest::Response) -> CohereApiError {
+        let status = response.status();
+        let text = response.text().await;
+        match text{
+            Err(_) => CohereApiError::Unknown,
+            Ok(text) => {
+                CohereApiError::ApiError(
+                    status,
+                    serde_json::from_str::<CohereApiErrorResponse>(&text)
+                        .unwrap_or(CohereApiErrorResponse {
+                            message: format!("Unknown API Error: {}", text),
+                        })
+                        .message,
+                )
+            },
+        }
     }
 
     /// Verify that the Cohere API key being used is valid

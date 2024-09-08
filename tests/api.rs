@@ -6,14 +6,10 @@ mod tests {
         api::{
             chat::{ChatRequest, ChatResponse, ChatStreamResponse},
             classify::{Classification, ClassifyExample, ClassifyRequest, LabelProperties},
-            detect_language::{DetectLanguageRequest, DetectLanguageResult},
             detokenize::DetokenizeRequest,
             embed::EmbedRequest,
             generate::{GenerateRequest, ReturnLikelihoods},
             rerank::{ReRankModel, ReRankRequest, ReRankResult},
-            summarize::{
-                SummarizeExtractiveness, SummarizeFormat, SummarizeLength, SummarizeRequest,
-            },
             tokenize::TokenizeRequest,
             GenerateModel, Truncate,
         },
@@ -183,62 +179,6 @@ mod tests {
                 input: "hey i need u to send some $".to_string(),
             },
             response[1]
-        );
-    }
-
-    #[tokio::test]
-
-    async fn test_detect_language() {
-        // Create mock server
-        let mut mock_server = mockito::Server::new_async().await;
-        let mock_url = mock_server.url();
-
-        // Create a mock
-        let mock_endpoint = mock_server
-            .mock("POST", "/detect-language")
-            .with_status(200)
-            .with_header("content-type", "application/json")
-            .with_body(
-                r#"{
-                "id":"e09aaf3b-5806-4b54-9b9d-110d262e2baf",
-                "results":[
-                    {"language_code":"en","language_name":"English"},
-                    {"language_code":"es","language_name":"Spanish"}
-                ],
-                "meta":{"api_version":{"version":"1"}}}"#,
-            )
-            .create_async()
-            .await;
-
-        let client = Cohere::new(mock_url, "test-key");
-
-        let request = DetectLanguageRequest {
-            texts: &["Hello Cohere!".to_string(), "Hola mis amigos!".to_string()],
-        };
-
-        let response = client.detect_language(&request).await;
-
-        // assert that mock endpoint was called
-        mock_endpoint.assert_async().await;
-
-        assert!(response.is_ok());
-
-        let response = response.unwrap();
-
-        assert_eq!(2, response.len());
-
-        assert_eq!(
-            vec![
-                DetectLanguageResult {
-                    language_code: "en".to_string(),
-                    language_name: "English".to_string(),
-                },
-                DetectLanguageResult {
-                    language_code: "es".to_string(),
-                    language_name: "Spanish".to_string(),
-                }
-            ],
-            response
         );
     }
 
@@ -497,55 +437,6 @@ mod tests {
             count += 1;
         }
         assert_eq!(expected_messages.len(), count);
-    }
-
-    #[tokio::test]
-    async fn test_summarize() {
-        // Create mock server
-        let mut mock_server = mockito::Server::new_async().await;
-        let mock_url = mock_server.url();
-
-        // Create a mock
-        let mock_endpoint = mock_server
-            .mock("POST", "/summarize")
-            .with_status(200)
-            .with_header("content-type", "application/json")
-            .with_body(
-                r#"{
-                    "id": "52fe10e7-0bb9-4b7d-84e5-36422f8e7343",
-                    "summary": "What is ice cream? How is it made? What is its history? Find out all about ice cream on the BBC Food website.",
-                    "meta": {
-                      "api_version": {
-                        "version": "1"
-                      }
-                    }
-                  }"#,
-            )
-            .create_async()
-            .await;
-
-        let client = Cohere::new(mock_url, "test-key");
-
-        let response = client
-            .summarize(&SummarizeRequest {
-                text: "Ice cream is a sweetened frozen food typically eaten as a snack or dessert. It may be made from milk or cream and is flavoured with a sweetener, either sugar or an alternative, and a spice, such as cocoa or vanilla, or with fruit such as strawberries or peaches. It can also be made by whisking a flavored cream base and liquid nitrogen together. Food coloring is sometimes added, in addition to stabilizers. The mixture is cooled below the freezing point of water and stirred to incorporate air spaces and to prevent detectable ice crystals from forming. The result is a smooth, semi-solid foam that is solid at very low temperatures (below 2 °C or 35 °F). It becomes more malleable as its temperature increases.\n\nThe meaning of the name \"ice cream\" varies from one country to another. In some countries, such as the United States, \"ice cream\" applies only to a specific variety, and most governments regulate the commercial use of the various terms according to the relative quantities of the main ingredients, notably the amount of cream. Products that do not meet the criteria to be called ice cream are sometimes labelled \"frozen dairy dessert\" instead. In other countries, such as Italy and Argentina, one word is used fo\r all variants. Analogues made from dairy alternatives, such as goat's or sheep's milk, or milk substitutes (e.g., soy, cashew, coconut, almond milk or tofu), are available for those who are lactose intolerant, allergic to dairy protein or vegan.",
-                length: Some(SummarizeLength::Medium),
-                format: Some(SummarizeFormat::Paragraph),
-                model: Some(GenerateModel::Command),
-                extractiveness: Some(SummarizeExtractiveness::Low),
-                temperature: Some(0.3),
-                ..Default::default()
-            })
-            .await;
-
-        // assert that mock endpoint was called
-        mock_endpoint.assert_async().await;
-
-        assert!(response.is_ok());
-
-        let response = response.unwrap();
-
-        assert_eq!("What is ice cream? How is it made? What is its history? Find out all about ice cream on the BBC Food website.".to_string(), response);
     }
 
     #[tokio::test]

@@ -3,12 +3,10 @@ use std::time::Duration;
 use api::{
     chat::{ChatRequest, ChatStreamRequest, ChatStreamResponse},
     classify::{Classification, ClassifyRequest, ClassifyResponse},
-    detect_language::{DetectLanguageRequest, DetectLanguageResponse, DetectLanguageResult},
     detokenize::{DetokenizeRequest, DetokenizeResponse},
     embed::{EmbedRequest, EmbedResponse},
     generate::{GenerateRequest, GenerateResponse, Generation},
     rerank::{ReRankRequest, ReRankResponse, ReRankResult},
-    summarize::{SummarizeRequest, SummarizeResponse},
     tokenize::{TokenizeRequest, TokenizeResponse},
 };
 use reqwest::{header, ClientBuilder, StatusCode, Url};
@@ -231,18 +229,6 @@ impl Cohere {
         Ok(response.classifications)
     }
 
-    /// Generates a summary in English for a given text.
-    pub async fn summarize<'input>(
-        &self,
-        request: &SummarizeRequest<'input>,
-    ) -> Result<String, CohereApiError> {
-        let response = self
-            .request::<_, SummarizeResponse>("summarize", request)
-            .await?;
-
-        Ok(response.summary)
-    }
-
     /// Splits input text into smaller units called tokens using byte-pair encoding (BPE).
     pub async fn tokenize<'input>(
         &self,
@@ -263,18 +249,6 @@ impl Cohere {
             .await?;
 
         Ok(response.text)
-    }
-
-    /// Identifies which language each of the provided texts is written in
-    pub async fn detect_language<'input>(
-        &self,
-        request: &DetectLanguageRequest<'input>,
-    ) -> Result<Vec<DetectLanguageResult>, CohereApiError> {
-        let response = self
-            .request::<_, DetectLanguageResponse>("detect-language", request)
-            .await?;
-
-        Ok(response.results)
     }
 
     /// Takes a query plus an list of texts and return an ordered array with each text assigned a relevance score.

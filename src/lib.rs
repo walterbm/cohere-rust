@@ -137,7 +137,7 @@ impl Cohere {
             return Err(self.parse_error(response).await);
         }
 
-        let (tx, rx) = channel::<Result<Response, CohereStreamError>>(32);
+        let (tx, rx) = channel::<Result<Response, CohereStreamError>>(1);
         tokio::spawn(async move {
             let mut buf = bytes::BytesMut::with_capacity(1024);
             while let Ok(Some(chunk)) = response.chunk().await {

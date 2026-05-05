@@ -16,19 +16,24 @@ pub struct ReRankRequest<'input> {
 
 #[derive(strum_macros::Display, Serialize, Debug, Default)]
 pub enum ReRankModel {
-    #[strum(serialize = "rerank-english-v2.0")]
-    #[serde(rename = "rerank-english-v2.0")]
-    EnglishV2,
-    #[strum(serialize = "rerank-multilingual-v2.0")]
-    #[serde(rename = "rerank-multilingual-v2.0")]
-    MultilingualV2,
+    #[strum(serialize = "rerank-v4.0-pro")]
+    #[serde(rename = "rerank-v4.0-pro")]
+    #[default]
+    RerankV4Pro,
+    #[strum(serialize = "rerank-v4.0-fast")]
+    #[serde(rename = "rerank-v4.0-fast")]
+    RerankV4Fast,
+    #[strum(serialize = "rerank-v3.5")]
+    #[serde(rename = "rerank-v3.5")]
+    RerankV35,
     #[strum(serialize = "rerank-english-v3.0")]
     #[serde(rename = "rerank-english-v3.0")]
-    #[default]
     EnglishV3,
     #[strum(serialize = "rerank-multilingual-v3.0")]
     #[serde(rename = "rerank-multilingual-v3.0")]
     MultilingualV3,
+    /// Custom model name.
+    Custom(String),
 }
 
 #[derive(Deserialize, Debug)]

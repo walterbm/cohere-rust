@@ -1,6 +1,6 @@
-use cohere_rust::api::chat::{ChatMessage, ChatRequest};
-use cohere_rust::api::GenerateModel;
 use cohere_rust::Cohere;
+use cohere_rust::api::GenerateModel;
+use cohere_rust::api::chat::{ChatMessage, ChatRequest};
 
 #[tokio::main]
 async fn main() {

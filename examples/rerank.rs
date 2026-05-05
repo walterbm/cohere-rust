@@ -1,6 +1,6 @@
 use cohere_rust::{
-    api::rerank::{ReRankModel, ReRankRequest},
     Cohere,
+    api::rerank::{ReRankModel, ReRankRequest},
 };
 
 #[tokio::main]

@@ -4,20 +4,32 @@ use serde::{Deserialize, Serialize};
 
 use super::{EmbedModel, Truncate};
 
-#[derive(Serialize, Default, Debug)]
+#[derive(Serialize, Debug)]
 pub struct ClassifyRequest<'input> {
-    /// An optional string representing the model you'd like to use.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub model: Option<EmbedModel>,
+    /// The model to use for classification.
+    pub model: EmbedModel,
     /// An optional string representing the ID of a custom playground preset.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub preset: Option<String>,
-    /// An array of strings that you would like to classify.
+    /// The specific text inputs to be classified.
     pub inputs: &'input [String],
-    /// An array of ClassifyExamples representing examples and the corresponding label.
+    /// An array of text + label pairs to be used as reference examples.
     pub examples: &'input [ClassifyExample<'input>],
     /// Specify how the API will handle inputs longer than the maximum token length.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub truncate: Option<Truncate>,
+}
+
+impl Default for ClassifyRequest<'static> {
+    fn default() -> Self {
+        Self {
+            model: EmbedModel::EnglishV3,
+            preset: None,
+            inputs: &[],
+            examples: &[],
+            truncate: None,
+        }
+    }
 }
 
 #[derive(Serialize, Debug)]

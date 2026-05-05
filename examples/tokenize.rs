@@ -1,4 +1,4 @@
-use cohere_rust::{api::tokenize::TokenizeRequest, api::GenerateModel, Cohere};
+use cohere_rust::{Cohere, api::tokenize::TokenizeRequest};
 
 #[tokio::main]
 async fn main() {
@@ -6,7 +6,6 @@ async fn main() {
 
     let request = TokenizeRequest {
         text: "tokenize me! :D",
-        model: Some(GenerateModel::Command),
     };
 
     match co.tokenize(&request).await {

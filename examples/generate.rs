@@ -1,8 +1,8 @@
-use cohere_rust::api::{
-    generate::{GenerateRequest, ReturnLikelihoods},
-    Truncate,
-};
 use cohere_rust::Cohere;
+use cohere_rust::api::{
+    Truncate,
+    generate::{GenerateRequest, ReturnLikelihoods},
+};
 
 #[tokio::main]
 async fn main() {

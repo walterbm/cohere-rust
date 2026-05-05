@@ -1,12 +1,11 @@
-use cohere_rust::{api::detokenize::DetokenizeRequest, api::GenerateModel, Cohere};
+use cohere_rust::{Cohere, api::detokenize::DetokenizeRequest};
 
 #[tokio::main]
 async fn main() {
     let co = Cohere::default();
 
     let request = DetokenizeRequest {
-        tokens: &[10002, 2261, 2012, 8, 2792, 43],
-        model: Some(GenerateModel::Command),
+        tokens: &[206039, 2307, 8, 2168, 43],
     };
 
     match co.detokenize(&request).await {
